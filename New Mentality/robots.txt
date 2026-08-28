@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /brazilian-jiu-jitsu/
+Disallow: /muay-thai/
+Disallow: /kids-jiu-jitsu/
+Disallow: /privacy/
+Disallow: /terms/
+
+Sitemap: https://REPLACE-WITH-LIVE-DOMAIN.example/sitemap.xml
