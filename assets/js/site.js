@@ -111,6 +111,21 @@ var hero=document.querySelector(".hero"),
     hint=document.getElementById("hint"),
     shift=document.getElementById("stripShift");
 var hasParallax = !!(hero && heroText && heroPanels && media && tex && hint && shift);
+/* Below 900px the hero stacks heroText above heroMedia (see .hero-grid in
+   site.css) instead of sitting side by side. The scroll-linked translate/
+   fade below is tuned for the side-by-side desktop layout — on a stacked
+   mobile layout it drags the heading text down into the schedule/reviews
+   cards as you scroll, producing a ghosting/overlap glitch. So the whole
+   effect is skipped on mobile widths; mobile gets the plain static layout. */
+var mobileHeroMq = window.matchMedia && window.matchMedia("(max-width:900px)");
+var isMobileHero = !!(mobileHeroMq && mobileHeroMq.matches);
+function resetParallaxStyles(){
+  [heroText,heroPanels,media,tex,vidEl,hint,shift].forEach(function(el){
+    if(!el) return;
+    el.style.transform="";
+    el.style.opacity="";
+  });
+}
 var ticking=false,lastP=-1;
 function para(){
   ticking=false;
@@ -132,12 +147,18 @@ function onScroll(){
   var hdr=document.getElementById("hdr");
   if(hdr) hdr.classList.toggle("stuck", window.scrollY>40);
   belt();
-  if(reduce || !hasParallax) return;
+  if(reduce || !hasParallax || isMobileHero) return;
   if(window.scrollY <= hero.offsetHeight + 80 && !ticking){ ticking=true; requestAnimationFrame(para); }
 }
-onScroll(); if(!reduce && hasParallax) para();
+onScroll(); if(!reduce && hasParallax && !isMobileHero) para();
 window.addEventListener("scroll",onScroll,{passive:true});
-window.addEventListener("resize",function(){ lastP=-1; if(!reduce && hasParallax) para(); },{passive:true});
+window.addEventListener("resize",function(){
+  var wasMobile=isMobileHero;
+  isMobileHero=!!(mobileHeroMq && mobileHeroMq.matches);
+  if(isMobileHero && !wasMobile && hasParallax) resetParallaxStyles();
+  lastP=-1;
+  if(!reduce && hasParallax && !isMobileHero) para();
+},{passive:true});
 
 
 /* ---------- BELT RAIL ---------- */
