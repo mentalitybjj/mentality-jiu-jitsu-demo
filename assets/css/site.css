@@ -713,7 +713,16 @@ body.menu-open .mobile-menu{opacity:1;visibility:visible;pointer-events:auto;tra
 .foot-legal nav a{font-size:11.5px;color:var(--muted);text-decoration:none}
 .foot-legal nav a:hover{color:var(--fg)}
 @media(max-width:900px){.foot-grid{grid-template-columns:1fr 1fr;gap:32px 20px}}
-@media(max-width:600px){.foot-grid{grid-template-columns:1fr}}
+/* Below 600px there's no room to also give the brand column its own half
+   width (the wordmark logo needs ~196px minimum) — so the brand block
+   spans the full row on its own, and the four link columns pack into a
+   2x2 grid underneath instead of stacking one full-width block per
+   column. Cuts the footer's mobile scroll height roughly in half versus
+   five stacked full-width blocks, with no change above 600px. */
+@media(max-width:600px){
+  .foot-grid{grid-template-columns:1fr 1fr;gap:28px 20px 30px}
+  .foot-grid .foot-col:first-child{grid-column:1/-1}
+}
 
 /* ============ MULTI-PAGE: COMING SOON NOTICE ============ */
 .soon{border:1px solid var(--line);background:var(--surface);padding:22px 24px;font-size:14px;color:var(--muted);margin:28px 0}
