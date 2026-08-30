@@ -377,22 +377,26 @@ function send(payload){
   if(!ENDPOINT) return Promise.resolve({ok:true,demo:true});
   var ctrl = ("AbortController" in window) ? new AbortController() : null;
   var timer = ctrl ? setTimeout(function(){ ctrl.abort(); }, 15000) : null;
+  /* Apps Script answers a POST with a 302 to a script.googleusercontent.com
+     "echo" URL. That redirect target does not reliably send back CORS
+     headers, so a normal cross-origin fetch can have the request succeed on
+     the wire (visible in the Network tab as 302 -> 200) while the browser
+     still refuses to let this script read the response, surfacing as a
+     generic "Failed to fetch". mode:"no-cors" avoids that: the request and
+     its redirect still go out and Apps Script still runs, we just can no
+     longer read the body back (the response comes back "opaque"), so a
+     resolved promise here only means the request was sent, not that the
+     server-side validation passed. Real send failures (offline, timeout,
+     the domain being unreachable) still reject below. */
   return fetch(ENDPOINT,{
     method:"POST",
-    /* text/plain keeps this a CORS "simple request" so the browser skips the
-       OPTIONS preflight, which Apps Script web apps do not answer. The script
-       reads the raw body with JSON.parse(e.postData.contents). */
+    mode:"no-cors",
     headers:{"Content-Type":"text/plain;charset=utf-8"},
     body:JSON.stringify(payload),
-    signal: ctrl ? ctrl.signal : undefined,
-    redirect:"follow"
-  }).then(function(r){
+    signal: ctrl ? ctrl.signal : undefined
+  }).then(function(){
     if(timer) clearTimeout(timer);
-    if(!r.ok) throw new Error("HTTP "+r.status);
-    return r.json();
-  }).then(function(d){
-    if(d && d.ok === false) throw new Error(d.error || "Rejected");
-    return d;
+    return {ok:true};
   });
 }
 function showErr(el,msg){ el.textContent=msg; el.classList.add("on"); }
