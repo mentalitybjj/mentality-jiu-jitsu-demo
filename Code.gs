@@ -41,6 +41,12 @@ var SPREADSHEET_ID = "";
 // GET (no login) — this is what gets fetched and attached to the email.
 var GUIDE_PDF_URL = "https://mentalitybjj.github.io/Mentality-Jiu-Jitsu-Your-First-Month.pdf";
 
+// Used only to sign the footer of the branded contact-form email below.
+// Keep these in sync with common.py on the site side if they ever change.
+var PHONE_HUMAN = "+61 452 518 690";
+var PHONE_TEL = "+61452518690";
+var ADDRESS_LINE = "7/23 Corporation Cct, Tweed Heads South NSW 2486";
+
 var TABS = {
   'trial-booking': {
     name: 'Trial bookings',
@@ -244,13 +250,100 @@ function sendContactEmail(data) {
       to: CONTACT_EMAIL,
       replyTo: data.email,
       subject: 'Website enquiry from ' + (name || data.email),
-      body: body,
+      body: body,                              // plain-text fallback
+      htmlBody: buildContactEmailHtml_(data),   // branded version most clients show
       name: 'Mentality Jiu Jitsu website'
     });
   } catch (ignored) {
     // Never let a mail failure lose the row that was already written — the
     // sheet still has the message, so it can be read there if this fails.
   }
+}
+
+/** Minimal HTML-escaping for anything pulled from a form submission before
+ *  it goes into an email body. */
+function escapeHtml_(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+/**
+ * Builds the branded HTML version of the contact-form email, styled to
+ * match the website (dark header band, cream card, the same monochrome
+ * look as the site's own "band" sections). Table layout with every style
+ * written inline — Outlook's desktop renderer (Word's HTML engine) ignores
+ * <style> blocks and most modern CSS, so anything that has to look right
+ * there has to be a table with inline attributes, not flexbox/grid.
+ */
+function buildContactEmailHtml_(data) {
+  var name = escapeHtml_((data.name || '').toString().trim() || 'there');
+  var email = escapeHtml_(data.email || '');
+  var messageHtml = escapeHtml_(data.message || '').replace(/\n/g, '<br>');
+  var page = escapeHtml_(data.page || '');
+  var replyHref = 'mailto:' + encodeURIComponent(data.email || '');
+
+  return ''
++'<!doctype html><html><head><meta charset="utf-8">'
++'<meta name="viewport" content="width=device-width,initial-scale=1"></head>'
++'<body style="margin:0;padding:0;background:#EFEBE1;">'
++'<div style="display:none;max-height:0;overflow:hidden;opacity:0;">New enquiry from '+name+' via the Mentality Jiu Jitsu website.</div>'
++'<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#EFEBE1;padding:32px 16px;">'
++'<tr><td align="center">'
++'<table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:600px;max-width:100%;background:#FFFFFF;border:1px solid #DCD7C8;">'
+
+  // header band
++'<tr><td align="center" style="background:#171717;padding:34px 24px;">'
++'<div style="font-family:Helvetica,Arial,sans-serif;font-size:22px;font-weight:bold;letter-spacing:3px;color:#E9E5D9;">MENTALITY</div>'
++'<div style="font-family:Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:2px;color:#A8A392;margin-top:6px;text-transform:uppercase;">Jiu Jitsu &middot; Tweed Heads South</div>'
++'</td></tr>'
+
+  // body
++'<tr><td style="padding:36px 36px 8px 36px;font-family:Helvetica,Arial,sans-serif;">'
++'<div style="font-size:11px;letter-spacing:2px;color:#8A8676;text-transform:uppercase;margin-bottom:10px;">New website enquiry</div>'
++'<div style="font-size:21px;font-weight:bold;color:#171717;margin-bottom:22px;">You&rsquo;ve got a message</div>'
++'</td></tr>'
+
++'<tr><td style="padding:0 36px;font-family:Helvetica,Arial,sans-serif;">'
++'<table role="presentation" width="100%" cellpadding="0" cellspacing="0">'
++'<tr><td style="padding-bottom:16px;">'
++'<div style="font-size:10.5px;letter-spacing:1.5px;color:#8A8676;text-transform:uppercase;">Name</div>'
++'<div style="font-size:16px;color:#171717;font-weight:bold;margin-top:3px;">'+name+'</div>'
++'</td></tr>'
++'<tr><td style="padding-bottom:20px;">'
++'<div style="font-size:10.5px;letter-spacing:1.5px;color:#8A8676;text-transform:uppercase;">Email</div>'
++'<div style="font-size:16px;margin-top:3px;"><a href="'+replyHref+'" style="color:#171717;text-decoration:underline;">'+email+'</a></div>'
++'</td></tr>'
++'</table>'
++'</td></tr>'
+
++'<tr><td style="padding:0 36px 28px 36px;font-family:Helvetica,Arial,sans-serif;">'
++'<div style="font-size:10.5px;letter-spacing:1.5px;color:#8A8676;text-transform:uppercase;margin-bottom:8px;">Message</div>'
++'<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F7F5EF;border-left:3px solid #171717;">'
++'<tr><td style="padding:16px 18px;font-size:15px;line-height:1.6;color:#171717;">'+messageHtml+'</td></tr>'
++'</table>'
++'</td></tr>'
+
++'<tr><td align="center" style="padding:0 36px 36px 36px;">'
++'<table role="presentation" cellpadding="0" cellspacing="0"><tr><td style="background:#171717;">'
++'<a href="'+replyHref+'" style="display:inline-block;padding:14px 30px;font-family:Helvetica,Arial,sans-serif;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:#E9E5D9;text-decoration:none;">Reply to '+name+'</a>'
++'</td></tr></table>'
++'</td></tr>'
+
+  // footer
++'<tr><td style="padding:22px 36px;background:#EFEBE1;border-top:1px solid #DCD7C8;font-family:Helvetica,Arial,sans-serif;">'
++'<div style="font-size:12px;color:#75726B;line-height:1.7;">'
++'Sent automatically from the &ldquo;Send us a message&rdquo; form on the Visit page'+(page ? ' &mdash; <a href="'+page+'" style="color:#75726B;">'+page+'</a>' : '')+'.<br>'
++ADDRESS_LINE+' &middot; <a href="tel:'+PHONE_TEL+'" style="color:#75726B;">'+PHONE_HUMAN+'</a>'
++'</div>'
++'</td></tr>'
+
++'</table>'
++'</td></tr>'
++'</table>'
++'</body></html>';
 }
 
 function reply(obj) {
