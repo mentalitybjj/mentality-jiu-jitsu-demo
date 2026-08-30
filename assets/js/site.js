@@ -27,6 +27,10 @@ window.addEventListener("error",function(){
 var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 /* ---------- DATA ---------- */
+/* The site no longer takes booking details itself — every "book" link goes
+   straight to Gymdesk's own signup page in a new tab. Change this one line
+   if that URL is ever updated. */
+var GYMDESK_SIGNUP="https://mentality-jiu-jitsu.gymdesk.com/signup";
 var SCHEDULE={
  Mon:[{t:"3:45 – 4:30 pm",h:15.75,n:"Kids BJJ",s:"Ages 4–7",c:"kids"},{t:"4:30 – 5:15 pm",h:16.5,n:"Kids BJJ",s:"Ages 8–14",c:"kids"},{t:"5:30 – 6:30 pm",h:17.5,n:"BJJ Gi",s:"Adults · all levels",c:"bjj"},{t:"6:30 – 7:30 pm",h:18.5,n:"Muay Thai",s:"Adults · all levels",c:"muaythai"}],
  Tue:[{t:"12:00 – 1:00 pm",h:12,n:"BJJ No Gi",s:"Adults · lunchtime",c:"bjj"},{t:"3:45 – 4:30 pm",h:15.75,n:"Kids BJJ",s:"Ages 4–7",c:"kids"},{t:"4:30 – 5:15 pm",h:16.5,n:"Kids BJJ",s:"Ages 8–14",c:"kids"},{t:"5:30 – 6:30 pm",h:17.5,n:"Muay Thai",s:"Adults · all levels",c:"muaythai"},{t:"6:30 – 7:30 pm",h:18.5,n:"BJJ No Gi",s:"Adults · all levels",c:"bjj"}],
@@ -320,11 +324,11 @@ function syncDays(){ Array.prototype.forEach.call(daysEl.children,function(b){ b
 function renderSlots(){
   var list=(SCHEDULE[curDay]||[]).filter(function(s){return curFilter==="all"||s.c===curFilter});
   if(!list.length){
-    slotsEl.innerHTML='<p class="slot-empty">No '+(curFilter==="all"?"":LABEL[curFilter].toLowerCase()+" ")+'classes on '+curDay+'day. Try another day, or <a href="#book">book a trial</a> and we\'ll find you a time.</p>';
+    slotsEl.innerHTML='<p class="slot-empty">No '+(curFilter==="all"?"":LABEL[curFilter].toLowerCase()+" ")+'classes on '+curDay+'day. Try another day, or <a href="'+GYMDESK_SIGNUP+'" target="_blank" rel="noopener">book a trial</a> and we\'ll find you a time.</p>';
     return;
   }
   slotsEl.innerHTML=list.map(function(s){
-    return '<div class="slot"><div class="slot-time">'+s.t+'</div><div class="slot-name">'+s.n+'<small>'+s.s+'</small></div><a href="#book" class="btn btn-sm btn-ghost" data-pref="'+s.c+'">Try this class</a></div>';
+    return '<div class="slot"><div class="slot-time">'+s.t+'</div><div class="slot-name">'+s.n+'<small>'+s.s+'</small></div><a href="'+GYMDESK_SIGNUP+'" target="_blank" rel="noopener" class="btn btn-sm btn-ghost">Try this class</a></div>';
   }).join("");
 }
 Array.prototype.forEach.call(document.querySelectorAll(".chip"),function(c){
@@ -373,81 +377,6 @@ function send(payload){
 function showErr(el,msg){ el.textContent=msg; el.classList.add("on"); }
 function hideErr(el){ el.classList.remove("on"); }
 var FAIL = "We couldn't send that just now. Please check your connection and try again — or call us on 0452 518 690 and we'll book you in.";
-
-/* ---------- BOOKING (only on the page that carries the booking form) ---------- */
-var stepsEl=document.getElementById("steps");
-if(stepsEl && document.getElementById("bookForm")){
-var state={prog:null,day:null,time:null,className:""};
-var panes=[null,document.getElementById("p1"),document.getElementById("p2"),document.getElementById("p3"),document.getElementById("p4")];
-var steps=stepsEl.children;
-function goto(n){
-  for(var i=1;i<panes.length;i++) panes[i].classList.toggle("on", i===n);
-  for(var s=0;s<steps.length;s++) steps[s].classList.toggle("on", s===n-1);
-}
-function pickProgram(p){
-  state.prog=p;
-  Array.prototype.forEach.call(document.querySelectorAll("[data-prog]"),function(b){ b.setAttribute("aria-pressed", b.dataset.prog===p?"true":"false"); });
-  buildClassList(); goto(2);
-}
-Array.prototype.forEach.call(document.querySelectorAll("[data-prog]"),function(b){ b.addEventListener("click",function(){ pickProgram(b.dataset.prog); }); });
-function buildClassList(){
-  var out=[];
-  DAYS.forEach(function(d){ (SCHEDULE[d]||[]).forEach(function(s){ if(s.c===state.prog) out.push({d:d,s:s}); }); });
-  document.getElementById("classOpts").innerHTML=out.map(function(o,i){
-    return '<button class="opt" data-slot="'+i+'" aria-pressed="false"><span><strong>'+o.d+' · '+o.s.t+'</strong><em>'+o.s.n+' · '+o.s.s+'</em></span><span class="tick">Selected</span></button>';
-  }).join("");
-  Array.prototype.forEach.call(document.querySelectorAll("[data-slot]"),function(b){
-    b.addEventListener("click",function(){
-      var o=out[+b.dataset.slot];
-      state.day=o.d; state.time=o.s.t; state.className=o.s.n;
-      Array.prototype.forEach.call(document.querySelectorAll("[data-slot]"),function(x){ x.setAttribute("aria-pressed", x===b?"true":"false"); });
-      document.getElementById("recap").innerHTML='<div><span>Program</span>'+LABEL[state.prog]+'</div><div><span>Class</span>'+state.className+'</div><div><span>When</span>'+o.d+', '+o.s.t+'</div>';
-      goto(3);
-    });
-  });
-}
-Array.prototype.forEach.call(document.querySelectorAll("[data-back]"),function(b){ b.addEventListener("click",function(){ goto(+b.dataset.back); }); });
-document.addEventListener("click",function(e){
-  var t=e.target.closest&&e.target.closest("[data-pref]");
-  if(t) pickProgram(t.dataset.pref);
-});
-
-var bookBtn=document.getElementById("bookBtn"), bookErr=document.getElementById("bookErr");
-document.getElementById("bookForm").addEventListener("submit",function(e){
-  e.preventDefault();
-  var n=document.getElementById("bn").value.trim(),l=document.getElementById("bl").value.trim(),
-      p=document.getElementById("bp").value.replace(/[^0-9]/g,""),m=document.getElementById("be").value.trim();
-  var errs=[bad("bn",n.length<2),bad("bl",l.length<1),bad("bp",p.length<8),bad("be",!EMAIL.test(m))];
-  if(errs.some(Boolean)) return;
-  hideErr(bookErr);
-  var label=bookBtn.textContent;
-  bookBtn.disabled=true; bookBtn.textContent="Sending…";
-  send({
-    type:"trial-booking",
-    program:LABEL[state.prog]||"", className:state.className||"",
-    classDay:state.day||"", classTime:state.time||"",
-    firstName:n, lastName:l,
-    mobile:document.getElementById("bp").value.trim(), email:m,
-    experience:document.getElementById("bx").value,
-    marketingConsent:document.getElementById("bc").checked?"Yes":"No",
-    company:document.getElementById("bhp").value,
-    page:location.href
-  }).then(function(){
-    document.getElementById("doneLine").innerHTML='Thanks '+n.replace(/[<>&]/g,"")+' — your first '+LABEL[state.prog].toLowerCase()+' class is <strong>'+state.day+', '+state.time+'</strong>.';
-    goto(4);
-  })["catch"](function(){
-    showErr(bookErr,FAIL);
-  }).then(function(){
-    bookBtn.disabled=false; bookBtn.textContent=label;
-  });
-});
-var againBtn=document.getElementById("again");
-if(againBtn) againBtn.addEventListener("click",function(){
-  document.getElementById("bookForm").reset();
-  Array.prototype.forEach.call(document.querySelectorAll(".field"),function(f){f.classList.remove("bad")});
-  goto(1);
-});
-} /* end booking guard */
 
 /* ---------- LEAD (beginner's guide download — only where the form exists) ---------- */
 var leadFormEl=document.getElementById("leadForm");

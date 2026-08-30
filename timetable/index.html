@@ -170,7 +170,7 @@
       <svg class="moon" viewBox="0 0 24 24"><path d="M20.5 14.6A8.6 8.6 0 0 1 9.4 3.5a8.6 8.6 0 1 0 11.1 11.1Z"/></svg>
     </button>
     <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu"><span></span></button>
-    <a href="../timetable/#book" class="btn btn-sm">Book your 3 free classes</a>
+    <a href="https://mentality-jiu-jitsu.gymdesk.com/signup" target="_blank" rel="noopener" class="btn btn-sm">Book your 3 free classes</a>
   </div>
 </header>
 <div class="mobile-menu" id="mobileMenu">
@@ -180,7 +180,7 @@
       <a href="../brazilian-jiu-jitsu/">Brazilian Jiu Jitsu</a><a href="../muay-thai/">Muay Thai</a><a href="../kids-jiu-jitsu/">Kids Jiu Jitsu</a><a href="../adults-beginners/">Adults & Beginners</a>
     </div>
     <a href="../timetable/">Timetable</a><a href="../first-class/">First Class</a><a href="../membership/">Membership</a><a href="../about/">About</a><a href="../reviews/">Reviews</a><a href="../visit/">Visit</a>
-    <div class="mm-cta"><a href="../timetable/#book" class="btn btn-wide">Book your 3 free classes</a></div>
+    <div class="mm-cta"><a href="https://mentality-jiu-jitsu.gymdesk.com/signup" target="_blank" rel="noopener" class="btn btn-wide">Book your 3 free classes</a></div>
   </nav>
 </div>
 
@@ -191,8 +191,8 @@
     <nav class="crumb" aria-label="Breadcrumb"><a href="../">Home</a><span aria-hidden="true">/</span><span aria-current="page">Timetable</span></nav>
     <p class="eyebrow">Weekly schedule</p>
     <h1 class="h-lg">Find a class that<br>fits your week</h1>
-    <p class="lede">Twenty-two classes a week across Brazilian Jiu Jitsu, Muay Thai and Kids Jiu Jitsu. Filter below, then book your three free classes.</p>
-    
+    <p class="lede">Twenty-two classes a week across Brazilian Jiu Jitsu, Muay Thai and Kids Jiu Jitsu. Filter below, then book your three free classes through Gymdesk, our booking partner.</p>
+    <div class="head-cta"><a href="https://mentality-jiu-jitsu.gymdesk.com/signup" target="_blank" rel="noopener" class="btn">Book your 3 free classes</a></div>
   </div>
 </div>
 <section>
@@ -207,65 +207,28 @@
     <div id="slots" role="tabpanel"></div>
     <div class="tt-note rv">
       <p>This is the standing weekly schedule. Times can change for public holidays and events &mdash; Gymdesk always has the live version.</p>
-      <a class="btn btn-sm btn-ghost" href="https://mentality-jiu-jitsu.gymdesk.com/" target="_blank" rel="noopener">Live schedule &amp; booking &rarr;</a>
+      <a class="btn btn-sm btn-ghost" href="https://mentality-jiu-jitsu.gymdesk.com/signup" target="_blank" rel="noopener">Live schedule &amp; booking &rarr;</a>
     </div>
   </div>
 </section>
-<section id="book" class="band">
+<section class="band">
   <div class="wrap">
-    <div class="cols-2" style="align-items:start;gap:clamp(28px,4vw,60px)">
+    <div class="cols-2" style="align-items:center;gap:clamp(28px,4vw,60px)">
       <div class="rv">
         <p class="eyebrow">Free trial</p>
         <h2 class="h-lg" style="margin:14px 0 18px">Three classes.<br>No card. No catch.</h2>
-        <p class="lede">Pick a program, pick a time that suits you, tell us where to send the details. We'll confirm by text and text you again the day before so you don't forget.</p>
+        <p class="lede">Pick a program and a time that suits you on Gymdesk, our booking partner &mdash; it only takes a minute, and there's no payment involved for the trial.</p>
         <ul class="info-list" style="margin-top:28px">
           <li><b>Cost</b><span>Nothing. Three full classes, free.</span></li>
           <li><b>Bring</b><span>Shorts, a t-shirt, a water bottle. We have loan gear.</span></li>
           <li><b>Then what</b><span>If you want to keep going: $55&ndash;60 per week. If not, no follow-up.</span></li>
         </ul>
       </div>
-      <div class="booker rv">
-        <div class="steps" id="steps"><div class="step on">1 &middot; Program</div><div class="step">2 &middot; Time</div><div class="step">3 &middot; Details</div></div>
-        <div class="pane on" id="p1">
-          <p class="eyebrow" style="margin-bottom:16px">Who is the trial for?</p>
-          <button class="opt" data-prog="bjj" aria-pressed="false"><span><strong>Adult BJJ</strong><em>Gi and No Gi &middot; 16 and over</em></span><span class="tick">Selected</span></button>
-          <button class="opt" data-prog="muaythai" aria-pressed="false"><span><strong>Muay Thai</strong><em>Striking and conditioning &middot; 16 and over</em></span><span class="tick">Selected</span></button>
-          <button class="opt" data-prog="kids" aria-pressed="false"><span><strong>Kids BJJ</strong><em>Ages 4&ndash;7 and 8&ndash;14</em></span><span class="tick">Selected</span></button>
-        </div>
-        <div class="pane" id="p2">
-          <p class="eyebrow" style="margin-bottom:16px">Pick your first class</p>
-          <div id="classOpts"></div>
-          <button class="back" data-back="1">&larr; Change program</button>
-        </div>
-        <div class="pane" id="p3">
-          <div class="recap" id="recap"></div>
-          <form id="bookForm" novalidate>
-            <div class="row2">
-              <div class="field"><label for="bn">First name</label><input id="bn" autocomplete="given-name"><p class="err">Tell us what to call you.</p></div>
-              <div class="field"><label for="bl">Last name</label><input id="bl" autocomplete="family-name"><p class="err">Last name is required.</p></div>
-            </div>
-            <div class="field"><label for="bp">Mobile</label><input id="bp" type="tel" inputmode="tel" placeholder="04XX XXX XXX" autocomplete="tel"><p class="err">We text your confirmation here &mdash; please check the number.</p></div>
-            <div class="field"><label for="be">Email</label><input id="be" type="email" placeholder="you@example.com" autocomplete="email"><p class="err">That email doesn't look right.</p></div>
-            <div class="field"><label for="bx">Trained before? (optional)</label><select id="bx"><option>Never trained anything</option><option>Some martial arts, not BJJ</option><option>Trained BJJ before</option><option>Currently training elsewhere</option></select></div>
-            <label class="consent"><input type="checkbox" id="bc"><span>Send me class reminders and gym updates. Unsubscribe anytime.</span></label>
-            <input class="hp" id="bhp" type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
-            <p class="form-err" id="bookErr" role="alert"></p>
-            <button type="submit" class="btn btn-wide" id="bookBtn">Confirm my free trial</button>
-            <button type="button" class="back" data-back="2">&larr; Change class time</button>
-          </form>
-        </div>
-        <div class="pane" id="p4">
-          <div class="done-mark">&#10003;</div>
-          <h3 class="h-md">You're booked in</h3>
-          <p style="color:var(--muted);margin-top:10px;font-size:15px" id="doneLine"></p>
-          <ul class="done-list">
-            <li><b>01</b><span>Confirmation text is on its way to your mobile.</span></li>
-            <li><b>02</b><span>We'll text again the day before as a reminder.</span></li>
-            <li><b>03</b><span>Arrive 10 minutes early. Shorts, t-shirt, water bottle.</span></li>
-            <li><b>04</b><span>Ask for the coach at the desk &mdash; they'll be expecting you.</span></li>
-          </ul>
-          <button class="back" id="again">&larr; Book another class</button>
-        </div>
+      <div class="rv" style="text-align:center;padding:clamp(32px,5vw,52px);border:1px solid var(--line);background:var(--surface)">
+        <p class="eyebrow">Ready when you are</p>
+        <p class="lede" style="margin:14px 0 26px;font-size:15.5px">Booking is handled by Gymdesk, our scheduling partner &mdash; you'll pick your program and class time there.</p>
+        <a href="https://mentality-jiu-jitsu.gymdesk.com/signup" target="_blank" rel="noopener" class="btn btn-wide">Sign up on Gymdesk</a>
+        <p style="font-size:11.5px;color:var(--muted);margin-top:14px;font-family:var(--mono);letter-spacing:.06em">Opens in a new tab</p>
       </div>
     </div>
   </div>
@@ -295,7 +258,7 @@
       <div class="foot-col">
         <h4>Get Started</h4>
         <ul>
-          <li><a href="../timetable/#book">Free Trial</a></li>
+          <li><a href="https://mentality-jiu-jitsu.gymdesk.com/signup" target="_blank" rel="noopener">Free Trial</a></li>
           <li><a href="../first-class/">First Class</a></li>
           <li><a href="../membership/">Membership</a></li>
           <li><a href="../timetable/">Timetable</a></li>
@@ -325,7 +288,7 @@
   </div>
 </footer>
 
-<div class="dock"><p>3 free classes<small>No card, no contract</small></p><a href="../timetable/#book" class="btn btn-sm">Book now</a></div>
+<div class="dock"><p>3 free classes<small>No card, no contract</small></p><a href="https://mentality-jiu-jitsu.gymdesk.com/signup" target="_blank" rel="noopener" class="btn btn-sm">Book now</a></div>
 <div class="exit-promo" id="exitPromo" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="exitPromoTitle">
   <div class="exit-promo-scrim" id="exitPromoScrim"></div>
   <div class="exit-promo-card">
@@ -335,7 +298,7 @@
     <p class="eyebrow">Before you go</p>
     <h2 class="h-md" id="exitPromoTitle">3 days free on every class we teach.</h2>
     <p>BJJ, Muay Thai, kids classes &mdash; all of it, on us for three days. No card, no contract, just come see the room.</p>
-    <a href="../timetable/#book" class="btn btn-wide" id="exitPromoCta">Claim my 3-day trial</a>
+    <a href="https://mentality-jiu-jitsu.gymdesk.com/signup" target="_blank" rel="noopener" class="btn btn-wide" id="exitPromoCta">Claim my 3-day trial</a>
   </div>
 </div>
 
