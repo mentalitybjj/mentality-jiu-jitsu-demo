@@ -372,7 +372,7 @@ var EMAIL=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
    Deploy the script as:  Execute as = Me,  Who has access = Anyone.
    ("Anyone with a Google account" will fail — visitors are not signed in.) */
-var ENDPOINT = "";
+var ENDPOINT = "https://script.google.com/macros/s/AKfycby8cUb_P79pE36Adzw5wxWgBYBfOWM_m-tU9AnuzEkklcGStRvnYJD0mBDqXk8pJuIU/exec";
 function send(payload){
   if(!ENDPOINT) return Promise.resolve({ok:true,demo:true});
   var ctrl = ("AbortController" in window) ? new AbortController() : null;
@@ -428,6 +428,38 @@ leadFormEl.addEventListener("submit",function(e){
   });
 });
 } /* end lead guard */
+
+/* ---------- CONTACT (visit page enquiry form — only where it exists) ---------- */
+var contactFormEl=document.getElementById("contactForm");
+if(contactFormEl){
+var contactBtn=document.getElementById("contactBtn"), contactErr=document.getElementById("contactErr");
+contactFormEl.addEventListener("submit",function(e){
+  e.preventDefault();
+  var form=this;
+  var n=document.getElementById("cn").value.trim(),
+      m=document.getElementById("ce").value.trim(),
+      msg=document.getElementById("cm").value.trim();
+  var e1=bad("cn",n.length<2), e2=bad("ce",!EMAIL.test(m)), e3=bad("cm",msg.length<5);
+  if(e1||e2||e3) return;
+  hideErr(contactErr);
+  var label=contactBtn.textContent;
+  contactBtn.disabled=true; contactBtn.textContent="Sending…";
+  send({
+    type:"contact",
+    name:n, email:m, message:msg,
+    company:document.getElementById("chp").value,
+    page:location.href
+  }).then(function(){
+    document.getElementById("contactOkEmail").textContent=m;
+    form.classList.add("off");
+    document.getElementById("contactOk").classList.add("on");
+  })["catch"](function(){
+    showErr(contactErr,FAIL);
+  }).then(function(){
+    contactBtn.disabled=false; contactBtn.textContent=label;
+  });
+});
+} /* end contact guard */
 })();
 
 

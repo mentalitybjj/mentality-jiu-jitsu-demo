@@ -318,8 +318,9 @@ body.ready .s5{transition-delay:.52s}
 .opt[aria-pressed="true"] .tick{opacity:1}
 .field{margin-bottom:15px}
 .field label{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
-.field input,.field select{width:100%;background:var(--bg);border:1px solid var(--line);color:var(--fg);padding:13px 14px;font-family:var(--body);font-size:15px;border-radius:0}
-.field input:focus,.field select:focus{outline:0;border-color:var(--fg)}
+.field input,.field select,.field textarea{width:100%;background:var(--bg);border:1px solid var(--line);color:var(--fg);padding:13px 14px;font-family:var(--body);font-size:15px;border-radius:0}
+.field textarea{resize:vertical;min-height:110px;line-height:1.5}
+.field input:focus,.field select:focus,.field textarea:focus{outline:0;border-color:var(--fg)}
 .field .err{font-family:var(--mono);font-size:10.5px;color:#B03A2E;margin-top:6px;display:none;letter-spacing:.05em}
 .field.bad input,.field.bad select{border-color:#B03A2E}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -474,7 +475,7 @@ a.count:hover .count-cta{opacity:1;color:var(--fg)}
 @media(max-width:900px){.lead-in{grid-template-columns:1fr}}
 .lead-ok{display:none;border:1px solid var(--fg);padding:24px}
 .lead-ok.on{display:block;animation:fade .35s ease}
-.lead-form.off{display:none}
+.lead-form.off,.contact-card form.off{display:none}
 
 /* ============ VISIT ============ */
 .areas{display:flex;flex-wrap:wrap;gap:7px;margin-top:20px}
@@ -483,6 +484,7 @@ a.count:hover .count-cta{opacity:1;color:var(--fg)}
 .info-list li{padding:15px 0;border-bottom:1px solid var(--line);display:grid;grid-template-columns:96px 1fr;gap:14px;font-size:15px;align-items:baseline}
 .info-list li b{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:400}
 .info-list a{text-decoration:none;border-bottom:1px solid var(--line)}
+.contact-card{border:1px solid var(--line);background:var(--surface);padding:clamp(26px,3.6vw,44px);max-width:640px;margin:0 auto}
 
 /* ============ FINAL / FOOTER ============ */
 .final{text-align:center}

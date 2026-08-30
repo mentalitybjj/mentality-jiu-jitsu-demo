@@ -29,6 +29,11 @@
 // Optional. Leave "" to email nothing. Multiple addresses: "a@x.com,b@y.com"
 var NOTIFY_EMAIL = "";
 
+// Where "Send us a message" enquiries from the Visit page are emailed. This
+// one always fires for contact-form submissions (it's the whole point of
+// that form) — separate from the optional NOTIFY_EMAIL above.
+var CONTACT_EMAIL = "mentalityjiujitsu@outlook.com";
+
 // Optional. Leave "" to use the spreadsheet this script is bound to.
 var SPREADSHEET_ID = "";
 
@@ -45,6 +50,10 @@ var TABS = {
   'guide-download': {
     name: 'Guide downloads',
     headers: ['Received', 'First name', 'Email', 'Page']
+  },
+  'contact': {
+    name: 'Contact messages',
+    headers: ['Received', 'Name', 'Email', 'Message', 'Page']
   }
 };
 
@@ -78,6 +87,11 @@ function doPost(e) {
       row = [now, data.program, data.className, data.classDay, data.classTime,
              data.firstName, data.lastName, asText(data.mobile), data.email,
              data.experience, data.marketingConsent, data.page];
+    } else if (data.type === 'contact') {
+      if (!data.name || !data.email || !data.message) {
+        return reply({ ok: false, error: 'Missing required fields' });
+      }
+      row = [now, data.name, data.email, data.message, data.page];
     } else {
       if (!data.email) return reply({ ok: false, error: 'Missing email' });
       row = [now, data.firstName, data.email, data.page];
@@ -86,6 +100,7 @@ function doPost(e) {
     sheet.appendRow(row.map(function (v) { return v === undefined ? '' : v; }));
     notify(data);
     if (data.type === 'guide-download') sendGuide(data);
+    if (data.type === 'contact') sendContactEmail(data);
     return reply({ ok: true });
 
   } catch (err) {
@@ -140,6 +155,9 @@ function notify(data) {
         'Experience: ' + data.experience,
         'Marketing:  ' + data.marketingConsent
       ].join('\n');
+    } else if (data.type === 'contact') {
+      subject = 'Website enquiry — ' + data.name;
+      body = 'Name:    ' + data.name + '\nEmail:   ' + data.email + '\n\n' + data.message;
     } else {
       subject = 'Guide download — ' + data.firstName;
       body = 'Name:  ' + data.firstName + '\nEmail: ' + data.email;
@@ -185,6 +203,41 @@ function sendGuide(data) {
   } catch (ignored) {
     // Never let a mail failure lose the row that was already written — the
     // sheet still has their email, so it can be sent manually if this fails.
+  }
+}
+
+/**
+ * Emails a "Send us a message" enquiry from the Visit page straight to
+ * CONTACT_EMAIL. Unlike notify() above, this always runs for contact
+ * submissions — the whole point of that form is that the message actually
+ * reaches the inbox, not just the spreadsheet.
+ */
+function sendContactEmail(data) {
+  if (!CONTACT_EMAIL) return; // misconfigured — the row is still in the sheet
+  try {
+    var name = (data.name || '').toString().trim();
+    var body = [
+      'New message from the website contact form:',
+      '',
+      'Name:  ' + name,
+      'Email: ' + data.email,
+      '',
+      data.message,
+      '',
+      '—',
+      'Page: ' + (data.page || '')
+    ].join('\n');
+
+    MailApp.sendEmail({
+      to: CONTACT_EMAIL,
+      replyTo: data.email,
+      subject: 'Website enquiry from ' + (name || data.email),
+      body: body,
+      name: 'Mentality Jiu Jitsu website'
+    });
+  } catch (ignored) {
+    // Never let a mail failure lose the row that was already written — the
+    // sheet still has the message, so it can be read there if this fails.
   }
 }
 
