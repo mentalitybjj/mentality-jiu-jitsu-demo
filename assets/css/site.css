@@ -465,18 +465,14 @@ a.count:hover .count-cta{opacity:1;color:var(--fg)}
 .final .lede{margin-left:auto;margin-right:auto}
 .price-note{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-top:22px}
 footer.site{border-top:1px solid var(--line);padding:44px 0 110px;background:var(--bg);color:var(--fg)}
-.foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:flex-start}
 .foot-brand{gap:16px}
 .foot-brand .brand-mark{height:38px}
 .foot-brand .wordmark{width:clamp(196px,26vw,260px)}
-.foot p{font-size:12.5px;color:var(--muted);margin-top:14px}
-.foot p.foot-contact{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:8px}
+.foot-col p{font-size:12.5px;color:var(--muted);margin-top:14px;line-height:1.6;max-width:34ch}
+.foot-col p.foot-contact{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:8px;max-width:none}
 .foot-contact a{font-family:var(--mono);font-size:13.5px;font-weight:600;color:var(--fg);
   text-decoration:none;border-bottom:1px solid var(--line);transition:border-color .2s,opacity .2s}
 .foot-contact a:hover{border-color:var(--fg)}
-.foot nav{display:flex;gap:20px;flex-wrap:wrap}
-.foot nav a{font-size:12.5px;color:var(--muted);text-decoration:none}
-.foot nav a:hover{color:var(--fg)}
 
 /* ============ DOCK ============ */
 .dock{position:fixed;left:0;right:0;bottom:0;z-index:80;background:var(--bg);background:color-mix(in srgb,var(--bg) 95%,transparent);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:11px var(--gut);display:none;gap:12px;align-items:center}
