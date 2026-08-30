@@ -68,10 +68,18 @@ function doPost(e) {
     }
 
     var data = JSON.parse(e.postData.contents);
+    console.log('doPost received type=%s honeypot=%s', data.type, JSON.stringify(data.company));
 
-    // Honeypot: the form has a hidden "company" field no human ever fills in.
-    // Bots fill every field. Accept silently so they do not retry.
-    if (data.company) return reply({ ok: true });
+    // Honeypot: the form has a hidden field no human ever fills in (bots
+    // fill every field). Accept silently so they do not retry. NOTE: this
+    // used to be named "company", which browser autofill (saved business/
+    // address profiles) would sometimes fill in on real visitors, silently
+    // discarding their genuine submissions. It has been renamed to
+    // something autofill heuristics won't recognise.
+    if (data.company) {
+      console.log('honeypot tripped, discarding silently');
+      return reply({ ok: true });
+    }
 
     var spec = TABS[data.type];
     if (!spec) return reply({ ok: false, error: 'Unknown submission type' });
@@ -98,14 +106,18 @@ function doPost(e) {
     }
 
     sheet.appendRow(row.map(function (v) { return v === undefined ? '' : v; }));
+    console.log('row appended to sheet "%s"', spec.name);
     notify(data);
     if (data.type === 'guide-download') sendGuide(data);
     if (data.type === 'contact') sendContactEmail(data);
+    console.log('doPost finished ok for type=%s', data.type);
     return reply({ ok: true });
 
   } catch (err) {
     // Surface the failure to the site so it shows an error instead of a
-    // false "You're booked in".
+    // false "You're booked in". Logged too, since the client currently
+    // can't read this response body (see site.js / ENDPOINT comment).
+    console.error('doPost error: %s', err && err.stack ? err.stack : String(err));
     return reply({ ok: false, error: String(err) });
   } finally {
     try { lock.releaseLock(); } catch (ignored) {}
