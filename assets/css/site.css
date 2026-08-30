@@ -337,6 +337,26 @@ body.ready .s5{transition-delay:.52s}
 .consent{display:flex;gap:10px;align-items:flex-start;font-size:12.5px;color:var(--muted);margin:4px 0 18px;line-height:1.5}
 .consent input{width:16px;height:16px;margin-top:2px;flex-shrink:0;accent-color:var(--fg)}
 
+/* ============ MEET & GREET (first-class page) ============ */
+.meet-greet{display:flex;align-items:center;gap:22px;border:1px solid var(--line);background:var(--surface);padding:22px 26px;margin-bottom:40px}
+.mg-media{display:flex;flex-shrink:0}
+.mg-media img{width:72px;height:72px;border-radius:50%;object-fit:cover;object-position:50% 12%;box-shadow:0 0 0 3px var(--surface),0 0 0 4px var(--line)}
+.mg-media img:not(:first-child){margin-left:-18px}
+.meet-greet .eyebrow{margin-bottom:8px}
+.meet-greet p:not(.eyebrow){font-size:14.5px;color:var(--muted);line-height:1.6;max-width:56ch}
+.meet-greet strong{color:var(--fg);font-weight:600}
+@media(max-width:600px){.meet-greet{flex-direction:column;align-items:flex-start;gap:14px}}
+
+/* ============ FOUNDERS (compact homepage strip) ============ */
+.founders-row{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.founder-card{display:flex;gap:18px;align-items:flex-start;border:1px solid var(--line);background:var(--surface);padding:22px}
+.founder-card img{width:88px;height:88px;flex-shrink:0;border-radius:50%;object-fit:cover;object-position:50% 12%;box-shadow:0 0 0 1px var(--line)}
+.founder-body h3{font-family:var(--display);font-weight:500;font-size:17px;text-transform:uppercase}
+.founder-body .role{font-family:var(--mono);font-size:10.5px;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;margin-top:4px}
+.founder-body p:not(.role){font-size:13.5px;color:var(--muted);margin-top:11px;line-height:1.58}
+@media(max-width:940px){.founders-row{grid-template-columns:1fr}}
+@media(max-width:480px){.founder-card{flex-direction:column;align-items:flex-start}.founder-card img{width:72px;height:72px}}
+
 /* ============ COACHES ============ */
 .coach{border:1px solid var(--line);background:var(--surface);overflow:hidden}
 .coach-media{aspect-ratio:3/4;position:relative}
