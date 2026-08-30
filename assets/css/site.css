@@ -191,6 +191,7 @@ html[data-theme="light"] .tgl .moon{display:block}
 .hero-media .hero-cta{margin-top:12px;flex-direction:column;flex-wrap:nowrap}
 .hero-media .hero-cta .btn{width:100%}
 .hero-media .hero-cta .btn-ghost{background:var(--bg);background:color-mix(in srgb,var(--bg) 84%,transparent);-webkit-backdrop-filter:blur(9px);backdrop-filter:blur(9px)}
+.hero-media .hero-cta .btn-ghost:hover{background:var(--fg);color:var(--bg)}
 .stars{font-size:17px;letter-spacing:3px;margin-bottom:6px}
 .rating-n{font-family:var(--display);font-weight:500;font-size:40px;line-height:1}
 .hero-rate p{font-size:12px;color:var(--muted);margin-top:6px;font-family:var(--mono);letter-spacing:.1em;text-transform:uppercase}
