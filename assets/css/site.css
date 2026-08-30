@@ -349,16 +349,19 @@ body.ready .s5{transition-delay:.52s}
 
 /* ============ FOUNDERS (compact homepage strip) ============ */
 .founders-row{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-.founder-card{display:flex;gap:18px;align-items:flex-start;border:1px solid var(--line);background:var(--surface);padding:22px}
-.founder-card img{width:88px;height:88px;flex-shrink:0;border-radius:50%;object-fit:cover;object-position:50% 12%;box-shadow:0 0 0 1px var(--line)}
+.founder-card{display:flex;gap:18px;align-items:flex-start;border:1px solid var(--line);background:var(--surface);padding:22px;text-decoration:none;color:inherit;cursor:pointer;transition:border-color .2s,background .2s}
+.founder-card:hover{border-color:var(--fg);background:color-mix(in srgb,var(--surface) 80%,var(--fg) 6%)}
+.founder-card img{width:88px;height:88px;flex-shrink:0;border-radius:50%;object-fit:cover;object-position:50% 12%;box-shadow:0 0 0 1px var(--line);transition:box-shadow .2s}
+.founder-card:hover img{box-shadow:0 0 0 1px var(--fg)}
 .founder-body h3{font-family:var(--display);font-weight:500;font-size:17px;text-transform:uppercase}
 .founder-body .role{font-family:var(--mono);font-size:10.5px;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;margin-top:4px}
 .founder-body p:not(.role){font-size:13.5px;color:var(--muted);margin-top:11px;line-height:1.58}
+.founder-body .founder-more{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--fg);margin-top:12px;text-transform:uppercase;font-weight:600}
 @media(max-width:940px){.founders-row{grid-template-columns:1fr}}
 @media(max-width:480px){.founder-card{flex-direction:column;align-items:flex-start}.founder-card img{width:72px;height:72px}}
 
 /* ============ COACHES ============ */
-.coach{border:1px solid var(--line);background:var(--surface);overflow:hidden}
+.coach{border:1px solid var(--line);background:var(--surface);overflow:hidden;scroll-margin-top:96px}
 .coach-media{aspect-ratio:3/4;position:relative}
 /* These are the people, not decorative texture, so they stay in colour
    instead of the grayscale-reveals-on-hover treatment .ph uses elsewhere —
