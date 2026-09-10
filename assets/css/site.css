@@ -362,8 +362,8 @@ body.ready .s5{transition-delay:.52s}
 @media(max-width:940px){.founders-row{grid-template-columns:1fr}}
 @media(max-width:480px){.founder-card{flex-direction:column;align-items:flex-start}.founder-card img{width:72px;height:72px}}
 
-/* ============ TRAINER (single-coach spotlight card, e.g. Muay Thai stub) ============ */
-.trainer-row{display:flex;justify-content:center}
+/* ============ TRAINER (coach spotlight card(s), e.g. program stub pages) ============ */
+.trainer-row{display:flex;justify-content:center;flex-wrap:wrap;gap:32px}
 .trainer-card{width:100%;max-width:240px;text-align:center}
 .trainer-card img{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:50% 15%;border:1px solid var(--line)}
 .trainer-card h3{margin-top:16px;font-family:var(--display);font-weight:500;font-size:17px;text-transform:uppercase}
