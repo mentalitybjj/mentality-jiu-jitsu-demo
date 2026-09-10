@@ -97,7 +97,9 @@ function syncLabel(){
 }
 syncLabel();
 tgl.addEventListener("click",function(){
-  html.setAttribute("data-theme", html.getAttribute("data-theme")==="dark"?"light":"dark");
+  var next = html.getAttribute("data-theme")==="dark"?"light":"dark";
+  html.setAttribute("data-theme", next);
+  try{ localStorage.setItem("mjj-theme", next); }catch(e){}
   syncLabel();
 });
 

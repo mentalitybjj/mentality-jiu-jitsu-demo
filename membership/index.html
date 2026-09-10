@@ -10,8 +10,14 @@
 (function(){try{
   var d=document.documentElement;
   d.className+=" js";
-  var m=window.matchMedia&&window.matchMedia("(prefers-color-scheme: light)").matches;
-  d.setAttribute("data-theme", m?"light":"dark");
+  var saved=null;
+  try{ saved=localStorage.getItem("mjj-theme"); }catch(e){}
+  if(saved==="light"||saved==="dark"){
+    d.setAttribute("data-theme", saved);
+  }else{
+    var m=window.matchMedia&&window.matchMedia("(prefers-color-scheme: light)").matches;
+    d.setAttribute("data-theme", m?"light":"dark");
+  }
 }catch(e){}})();
 </script>
 <meta property="og:type" content="website">
