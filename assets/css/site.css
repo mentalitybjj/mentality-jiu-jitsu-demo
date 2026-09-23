@@ -360,10 +360,13 @@ body.ready .s5{transition-delay:.52s}
 .founder-body p:not(.role){font-size:13.5px;color:var(--muted);margin-top:11px;line-height:1.58}
 .founder-body .founder-more{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--fg);margin-top:12px;text-transform:uppercase;font-weight:600}
 @media(max-width:940px){.founders-row{grid-template-columns:1fr}}
+/* Single founder: one wider card instead of a half-empty two-column row */
+.founders-row.solo{grid-template-columns:minmax(0,760px)}
+.founders-row.solo .founder-card img{width:104px;height:104px}
 @media(max-width:480px){.founder-card{flex-direction:column;align-items:flex-start}.founder-card img{width:72px;height:72px}}
 
-/* ============ TRAINER (coach spotlight card(s), e.g. program stub pages) ============ */
-.trainer-row{display:flex;justify-content:center;flex-wrap:wrap;gap:32px}
+/* ============ TRAINER (single-coach spotlight card, e.g. Muay Thai stub) ============ */
+.trainer-row{display:flex;justify-content:center}
 .trainer-card{width:100%;max-width:240px;text-align:center}
 .trainer-card img{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:50% 15%;border:1px solid var(--line)}
 .trainer-card h3{margin-top:16px;font-family:var(--display);font-weight:500;font-size:17px;text-transform:uppercase}
@@ -385,6 +388,12 @@ body.ready .s5{transition-delay:.52s}
 .coach-body h3{font-family:var(--display);font-weight:500;font-size:19px;text-transform:uppercase}
 .coach-body .role{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;color:var(--muted);text-transform:uppercase;margin-top:5px}
 .coach-body p{font-size:14px;color:var(--muted);margin-top:13px}
+/* Single coach on the About page: photo beside the bio rather than a lone
+   half-width card */
+.coach-solo{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);max-width:980px}
+.coach-solo .coach-body{padding:clamp(22px,3.4vw,44px);align-self:center}
+.coach-solo .coach-body p:not(.role){font-size:15px;max-width:52ch}
+@media(max-width:700px){.coach-solo{grid-template-columns:1fr}}
 
 /* ============ REVIEWS ============ */
 .rev{border:1px solid var(--line);padding:26px 24px;display:flex;flex-direction:column}
@@ -541,11 +550,13 @@ footer.site{border-top:1px solid var(--line);padding:44px 0 110px;background:var
 .fig figcaption{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:11px;line-height:1.5}
 .m-tall{grid-column:span 4}
 .m-wide{grid-column:span 8}
+.m-half{grid-column:span 6}
+.m-half .ph img{object-position:center 22%}
 .m-tall .ph img{object-position:center 26%}
 .m-wide .ph img{object-position:center 32%}
 @media(max-width:900px){
   .mosaic{grid-template-columns:1fr;gap:22px}
-  .m-tall,.m-wide{grid-column:1/-1}
+  .m-tall,.m-wide,.m-half{grid-column:1/-1}
   .fig .ph{height:auto;aspect-ratio:4/3}
 }
 
@@ -604,7 +615,16 @@ html[data-theme="light"] .belt .b5{background:#E9E5D9}
   linear-gradient(90deg,var(--bg) 0%,var(--bg) 34%,rgba(0,0,0,0) 78%),
   linear-gradient(180deg,var(--bg) 0%,rgba(0,0,0,0) 26%,rgba(0,0,0,0) 62%,var(--bg) 100%)}
 html[data-theme="light"] .hero-vid video{filter:contrast(1.01) saturate(1.02) brightness(1.06)}
+/* Still photo in place of the hero video. The source is only 900px square, so
+   on desktop it covers the right-hand side (where the scrim lets it show)
+   rather than being stretched across the whole viewport; its left edge is
+   feathered so there's no hard line where it starts. */
+.hero-vid .hero-img{position:absolute;top:0;right:0;width:64%;height:100%;object-fit:cover;object-position:50% 30%;
+  filter:contrast(1.04) saturate(1.05) brightness(.97);will-change:transform;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0%,#000 32%);mask-image:linear-gradient(90deg,transparent 0%,#000 32%)}
+html[data-theme="light"] .hero-vid .hero-img{filter:contrast(1.01) saturate(1.02) brightness(1.06)}
 @media(max-width:900px){
+ .hero-vid .hero-img{top:auto;bottom:0;width:100%;height:62%;-webkit-mask-image:none;mask-image:none;object-position:50% 22%}
  .hero-scrim{background:linear-gradient(180deg,var(--bg) 0%,var(--bg) 46%,rgba(0,0,0,.15) 72%,var(--bg) 100%)}
 }
 .hero-grid{align-items:center}

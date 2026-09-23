@@ -10,21 +10,15 @@
 (function(){try{
   var d=document.documentElement;
   d.className+=" js";
-  var saved=null;
-  try{ saved=localStorage.getItem("mjj-theme"); }catch(e){}
-  if(saved==="light"||saved==="dark"){
-    d.setAttribute("data-theme", saved);
-  }else{
-    var m=window.matchMedia&&window.matchMedia("(prefers-color-scheme: light)").matches;
-    d.setAttribute("data-theme", m?"light":"dark");
-  }
+  var m=window.matchMedia&&window.matchMedia("(prefers-color-scheme: light)").matches;
+  d.setAttribute("data-theme", m?"light":"dark");
 }catch(e){}})();
 </script>
 <meta property="og:type" content="website">
 <meta property="og:title" content="Kids Jiu Jitsu — Mentality Jiu Jitsu, Tweed Heads South">
 <meta property="og:description" content="Kids Jiu Jitsu at Mentality Jiu Jitsu in Tweed Heads South. Full program page coming soon — book your three free classes today.">
 <meta property="og:url" content="https://REPLACE-WITH-LIVE-DOMAIN.example/kids-jiu-jitsu/">
-<meta property="og:image" content="https://REPLACE-WITH-LIVE-DOMAIN.example/assets/images/hero-poster.jpg">
+<meta property="og:image" content="https://REPLACE-WITH-LIVE-DOMAIN.example/assets/images/og-share.jpg">
 <meta property="og:locale" content="en_AU">
 <meta property="og:site_name" content="Mentality Jiu Jitsu">
 <meta name="twitter:card" content="summary_large_image">
@@ -205,29 +199,10 @@
 <section>
   <div class="wrap">
     <div class="cols-2" style="align-items:start;gap:clamp(28px,4vw,60px)">
-      <div class="ph rv" style="border:1px solid var(--line)"><img loading="lazy" src="../assets/images/kids-class.jpg" alt="Kids Jiu Jitsu class with both coaches at Mentality Jiu Jitsu"></div>
+      <div class="ph rv" style="border:1px solid var(--line)"><img loading="lazy" src="../assets/images/kids-class.jpg" alt="Kids Jiu Jitsu class with coach William Moraes at Mentality Jiu Jitsu"></div>
       <div class="rv">
         <div class="soon">A full page for Kids Jiu Jitsu &mdash; with class structure, what a session looks like and specifics for this program &mdash; is coming soon. In the meantime, see the <a href="../timetable/">weekly timetable</a> or read what to expect as a <a href="../adults-beginners/">first-time beginner</a>.</div>
         <a href="https://mentality-jiu-jitsu.gymdesk.com/signup" target="_blank" rel="noopener" class="btn" style="margin-top:8px">Book your 3 free classes</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="wrap">
-    <div class="sec-head rv" style="text-align:center;margin-left:auto;margin-right:auto">
-      <p class="eyebrow">Kids Jiu Jitsu</p>
-      <h2 class="h-lg">Your coaches</h2>
-    </div>
-    <div class="trainer-row">
-      <div class="trainer-card rv">
-        <img loading="lazy" src="../assets/images/felipe.jpg" alt="Felipe Andrade, co-founder and coach at Mentality Jiu Jitsu">
-        <h3>Felipe Andrade</h3>
-      </div>
-      <div class="trainer-card rv">
-        <img loading="lazy" src="../assets/images/william.jpg" alt="William Moraes, co-founder and coach at Mentality Jiu Jitsu">
-        <h3>William Moraes</h3>
       </div>
     </div>
   </div>

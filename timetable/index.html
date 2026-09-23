@@ -10,21 +10,15 @@
 (function(){try{
   var d=document.documentElement;
   d.className+=" js";
-  var saved=null;
-  try{ saved=localStorage.getItem("mjj-theme"); }catch(e){}
-  if(saved==="light"||saved==="dark"){
-    d.setAttribute("data-theme", saved);
-  }else{
-    var m=window.matchMedia&&window.matchMedia("(prefers-color-scheme: light)").matches;
-    d.setAttribute("data-theme", m?"light":"dark");
-  }
+  var m=window.matchMedia&&window.matchMedia("(prefers-color-scheme: light)").matches;
+  d.setAttribute("data-theme", m?"light":"dark");
 }catch(e){}})();
 </script>
 <meta property="og:type" content="website">
 <meta property="og:title" content="Class Timetable & Free Trial Booking — Mentality Jiu Jitsu">
 <meta property="og:description" content="See the full weekly timetable for Brazilian Jiu Jitsu, Muay Thai and Kids Jiu Jitsu in Tweed Heads South, then book your three free classes.">
 <meta property="og:url" content="https://REPLACE-WITH-LIVE-DOMAIN.example/timetable/">
-<meta property="og:image" content="https://REPLACE-WITH-LIVE-DOMAIN.example/assets/images/hero-poster.jpg">
+<meta property="og:image" content="https://REPLACE-WITH-LIVE-DOMAIN.example/assets/images/og-share.jpg">
 <meta property="og:locale" content="en_AU">
 <meta property="og:site_name" content="Mentality Jiu Jitsu">
 <meta name="twitter:card" content="summary_large_image">

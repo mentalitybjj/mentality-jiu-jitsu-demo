@@ -10,21 +10,15 @@
 (function(){try{
   var d=document.documentElement;
   d.className+=" js";
-  var saved=null;
-  try{ saved=localStorage.getItem("mjj-theme"); }catch(e){}
-  if(saved==="light"||saved==="dark"){
-    d.setAttribute("data-theme", saved);
-  }else{
-    var m=window.matchMedia&&window.matchMedia("(prefers-color-scheme: light)").matches;
-    d.setAttribute("data-theme", m?"light":"dark");
-  }
+  var m=window.matchMedia&&window.matchMedia("(prefers-color-scheme: light)").matches;
+  d.setAttribute("data-theme", m?"light":"dark");
 }catch(e){}})();
 </script>
 <meta property="og:type" content="website">
 <meta property="og:title" content="Mentality Jiu Jitsu — Brazilian Jiu Jitsu & Muay Thai, Tweed Heads South">
 <meta property="og:description" content="Beginner-friendly Brazilian Jiu Jitsu, Muay Thai and Kids Jiu Jitsu in Tweed Heads South. Three free classes, no experience needed. Serving Tweed Heads, Banora Point, Coolangatta and the southern Gold Coast.">
 <meta property="og:url" content="https://REPLACE-WITH-LIVE-DOMAIN.example/">
-<meta property="og:image" content="https://REPLACE-WITH-LIVE-DOMAIN.example/assets/images/hero-poster.jpg">
+<meta property="og:image" content="https://REPLACE-WITH-LIVE-DOMAIN.example/assets/images/og-share.jpg">
 <meta property="og:locale" content="en_AU">
 <meta property="og:site_name" content="Mentality Jiu Jitsu">
 <meta name="twitter:card" content="summary_large_image">
@@ -202,9 +196,7 @@
 
 <section class="hero" id="top">
   <div class="hero-vid" id="heroVid">
-    <video id="bgvid" autoplay muted loop playsinline preload="metadata" poster="assets/images/hero-poster.jpg?v=3" aria-hidden="true">
-      <source src="assets/video/hero.mp4?v=3" type="video/mp4">
-    </video>
+    <img class="hero-img" src="assets/images/room-group-promotion.jpg" alt="" aria-hidden="true" fetchpriority="high">
   </div>
   <div class="hero-scrim"></div>
   <div class="hero-tex" id="tex"></div>
@@ -254,15 +246,11 @@
 <section id="coaches" class="band" style="padding-top:clamp(40px,5.5vw,64px)">
   <div class="wrap">
     <div class="sec-head rv"><p class="eyebrow">Who's on the mat</p><h2 class="h-lg">The people<br>teaching you</h2>
-      <p class="lede">Felipe and William started Mentality themselves, and they're still the ones on the mats. Small enough that the coaches know your name and what you're working on. Big enough that there's always someone your size to train with.</p></div>
-    <div class="founders-row">
-      <a class="founder-card rv" href="about/#felipe" aria-label="Read Felipe Andrade's full bio and qualifications">
-        <img src="assets/images/felipe.jpg" alt="Felipe Andrade, co-founder and coach at Mentality Jiu Jitsu" loading="lazy">
-        <div class="founder-body"><h3>Felipe Andrade</h3><p class="role">Co-Founder &amp; Coach</p><p>Brown belt under Vicente Cavalcanti of Southside Brazilian Jiu Jitsu, and a two-time Queensland State champion with Pan Pacific and UK Devon titles.</p><p class="founder-more">Full bio &amp; belt history &rarr;</p></div>
-      </a>
+      <p class="lede">William founded Mentality, and he's still the one on the mats. Small enough that the coaches know your name and what you're working on. Big enough that there's always someone your size to train with.</p></div>
+    <div class="founders-row solo">
       <a class="founder-card rv" href="about/#william" aria-label="Read William Moraes's full bio and qualifications">
-        <img src="assets/images/william.jpg" alt="William Moraes, co-founder and coach at Mentality Jiu Jitsu" loading="lazy">
-        <div class="founder-body"><h3>William Moraes</h3><p class="role">Co-Founder &amp; Coach</p><p>Black belt under Professor Vicente Cavalcanti, Queensland State and NAGA champion, with No-Gi super-fight appearances at K1 Destroyer and Sprawl.</p><p class="founder-more">Full bio &amp; belt history &rarr;</p></div>
+        <img src="assets/images/william.jpg" alt="William Moraes, founder and coach at Mentality Jiu Jitsu" loading="lazy">
+        <div class="founder-body"><h3>William Moraes</h3><p class="role">Founder &amp; Coach</p><p>Black belt under Professor Vicente Cavalcanti, Queensland State and NAGA champion, with No-Gi super-fight appearances at K1 Destroyer and Sprawl.</p><p class="founder-more">Full bio &amp; belt history &rarr;</p></div>
       </a>
     </div>
     <div class="rv" style="margin-top:28px"><a href="about/" class="btn btn-sm btn-ghost">Meet the coaches</a></div>
@@ -290,11 +278,11 @@
       <p class="lede">Adults, kids, and striking. Every program has a starting point for people with zero experience &mdash; you are never dropped into something you are not ready for.</p>
     </div>
     <div class="cols-3">
-      <article class="prog rv"><div class="ph prog-media"><img loading="lazy" src="assets/images/bjj-class.jpg" alt="Adult Brazilian Jiu Jitsu class group photo at Mentality Jiu Jitsu"></div><p class="prog-tag">Adults &middot; 16+</p><h3>Brazilian<br>Jiu Jitsu</h3>
+      <article class="prog rv"><div class="ph prog-media"><img loading="lazy" src="assets/images/bjj-promotion.jpg" alt="William Moraes presenting blue belts to two members at Mentality Jiu Jitsu"></div><p class="prog-tag">Adults &middot; 16+</p><h3>Brazilian<br>Jiu Jitsu</h3>
         <p>Grappling and ground control. No striking, no getting hit. It rewards technique and patience over size and aggression, which is exactly why it works for people starting in their thirties and forties.</p>
         <ul><li>Gi and No Gi sessions</li><li>Beginners paired with experienced training partners</li><li>Weekday evenings, plus Tuesday and Thursday lunch</li></ul>
         <a href="brazilian-jiu-jitsu/" class="btn btn-sm btn-ghost btn-wide">About Brazilian Jiu Jitsu</a></article>
-      <article class="prog rv"><div class="ph prog-media"><img loading="lazy" src="assets/images/kids-class.jpg" alt="Kids Jiu Jitsu class with both coaches at Mentality Jiu Jitsu"></div><p class="prog-tag">Kids &middot; Ages 4&ndash;14</p><h3>Kids<br>Jiu Jitsu</h3>
+      <article class="prog rv"><div class="ph prog-media"><img loading="lazy" src="assets/images/kids-class.jpg" alt="Kids Jiu Jitsu class with coach William Moraes at Mentality Jiu Jitsu"></div><p class="prog-tag">Kids &middot; Ages 4&ndash;14</p><h3>Kids<br>Jiu Jitsu</h3>
         <p>Two age groups so a four year old is never on the mat with a fourteen year old. We build confidence, listening, and the instincts to handle themselves, taught in a way that keeps it fun &mdash; and it has already produced kids champions on the competition mats.</p>
         <ul><li>Ages 4&ndash;7 and 8&ndash;14, taught separately</li><li>Weekday afternoons and Saturday mornings</li><li>Parents welcome to watch every session</li></ul>
         <a href="kids-jiu-jitsu/" class="btn btn-sm btn-ghost btn-wide">About Kids Jiu Jitsu</a></article>

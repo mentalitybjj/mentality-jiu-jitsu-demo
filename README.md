@@ -7,21 +7,21 @@ Single-page website for Mentality Jiu Jitsu — Brazilian Jiu Jitsu and Muay Tha
 | File | Purpose |
 |---|---|
 | `index.html` | The entire site — HTML, CSS and JS in one file |
-| `hero.mp4` | Background loop for the hero section |
-| `hero-poster.jpg` | Still frame shown before the video loads |
-| `felipe.jpg`, `william.jpg` | Coach photos in the "Coaches" section |
+| `room-group-promotion.jpg` | Hero background photo (replaced the old hero video) |
+| `og-share.jpg` | Preview image shown when a page is shared on social media |
+| `william.jpg`, `zac.jpg` | Coach photos |
 | `Mentality-Jiu-Jitsu-Your-First-Month.pdf` | Beginner's guide — emailed to whoever requests it, never linked from the page |
 | `fonts/` | Licensed PP Neue Montreal + PP Supply Mono webfonts |
 | `Code.gs` | Apps Script form receiver (not served; kept as a backup) |
 
-All must stay in the same folder. `index.html` references the video, poster
+All must stay in the same folder. `index.html` references the images
 and fonts by relative path, and `Code.gs` fetches the PDF by its public URL
 (see below) to attach it to the email — the page itself has no link to it.
 
 ## Local preview
 
-Do **not** open `index.html` by double-clicking it — browsers block video over
-`file://` and you'll see the poster with no playback. Serve it over HTTP:
+Do **not** open `index.html` by double-clicking it — some features don't work
+over `file://`. Serve it over HTTP:
 
 ```
 python3 -m http.server 8000

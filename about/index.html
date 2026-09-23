@@ -10,21 +10,15 @@
 (function(){try{
   var d=document.documentElement;
   d.className+=" js";
-  var saved=null;
-  try{ saved=localStorage.getItem("mjj-theme"); }catch(e){}
-  if(saved==="light"||saved==="dark"){
-    d.setAttribute("data-theme", saved);
-  }else{
-    var m=window.matchMedia&&window.matchMedia("(prefers-color-scheme: light)").matches;
-    d.setAttribute("data-theme", m?"light":"dark");
-  }
+  var m=window.matchMedia&&window.matchMedia("(prefers-color-scheme: light)").matches;
+  d.setAttribute("data-theme", m?"light":"dark");
 }catch(e){}})();
 </script>
 <meta property="og:type" content="website">
 <meta property="og:title" content="About & Coaches — Mentality Jiu Jitsu, Tweed Heads South">
 <meta property="og:description" content="Meet the coaches at Mentality Jiu Jitsu and see inside the room &mdash; real photos from the mats in Tweed Heads South.">
 <meta property="og:url" content="https://REPLACE-WITH-LIVE-DOMAIN.example/about/">
-<meta property="og:image" content="https://REPLACE-WITH-LIVE-DOMAIN.example/assets/images/hero-poster.jpg">
+<meta property="og:image" content="https://REPLACE-WITH-LIVE-DOMAIN.example/assets/images/og-share.jpg">
 <meta property="og:locale" content="en_AU">
 <meta property="og:site_name" content="Mentality Jiu Jitsu">
 <meta name="twitter:card" content="summary_large_image">
@@ -197,15 +191,14 @@
     <nav class="crumb" aria-label="Breadcrumb"><a href="../">Home</a><span aria-hidden="true">/</span><span aria-current="page">About</span></nav>
     <p class="eyebrow">Who's on the mat</p>
     <h1 class="h-lg">The people teaching you,<br>and the room you're joining</h1>
-    <p class="lede">Felipe and William founded Mentality and still coach every program themselves. Small enough that they know your name and what you're working on. Big enough that there's always someone your size to train with.</p>
+    <p class="lede">William founded Mentality and still coaches on the mats himself. Small enough that the coaches know your name and what you're working on. Big enough that there's always someone your size to train with.</p>
     
   </div>
 </div>
 <section>
   <div class="wrap">
-    <div class="cols-2">
-      <article class="coach rv" id="felipe"><div class="ph coach-media"><img src="../assets/images/felipe.jpg" alt="Felipe Andrade, co-founder and coach at Mentality Jiu Jitsu" loading="lazy"></div><div class="coach-body"><h3>Felipe Andrade</h3><p class="role">Co-Founder &amp; Coach</p><p>Brown belt under Vicente Cavalcanti of Southside Brazilian Jiu Jitsu, and a two-time Queensland State champion with Pan Pacific and UK Devon titles. Brazilian-born with a degree in physical education, he coaches across every program on the mats.</p></div></article>
-      <article class="coach rv" id="william"><div class="ph coach-media"><img src="../assets/images/william.jpg" alt="William Moraes, co-founder and coach at Mentality Jiu Jitsu" loading="lazy"></div><div class="coach-body"><h3>William Moraes</h3><p class="role">Co-Founder &amp; Coach</p><p>Black belt under Professor Vicente Cavalcanti, Queensland State and NAGA champion, with No-Gi super-fight appearances at K1 Destroyer and Sprawl, and a super-fight at Thunder Fighter. Holds a degree in business administration and coaches across every program on the mats.</p></div></article>
+    <div>
+      <article class="coach coach-solo rv" id="william"><div class="ph coach-media"><img src="../assets/images/william.jpg" alt="William Moraes, founder and coach at Mentality Jiu Jitsu" loading="lazy"></div><div class="coach-body"><h3>William Moraes</h3><p class="role">Founder &amp; Coach</p><p>Black belt under Professor Vicente Cavalcanti, Queensland State and NAGA champion, with No-Gi super-fight appearances at K1 Destroyer and Sprawl, and a super-fight at Thunder Fighter. Holds a degree in business administration and coaches across every program on the mats.</p></div></article>
     </div>
   </div>
 </section>
@@ -218,18 +211,18 @@
     </div>
     <div class="mosaic">
       <figure class="fig m-tall rv">
-        <div class="ph"><img loading="lazy" src="../assets/images/room-coach.jpg" alt="Head coach at Mentality Jiu Jitsu"></div>
+        <div class="ph"><img loading="lazy" src="../assets/images/zac.jpg" alt="Zac O'Brien, Muay Thai coach at Mentality Jiu Jitsu"></div>
         <figcaption>Coaches who know your name by week two</figcaption>
-      </figure>
-      <figure class="fig m-wide rv">
-        <div class="ph"><img loading="lazy" src="../assets/images/room-belt-promotion.jpg" alt="Coaches presenting new blue belts to two members at Mentality Jiu Jitsu"></div>
-        <figcaption>Belt promotions &mdash; earned on the mat, not bought</figcaption>
       </figure>
       <figure class="fig m-wide rv">
         <div class="ph"><img loading="lazy" src="../assets/images/room-group-promotion.jpg" alt="A group of Mentality Jiu Jitsu members after a blue belt promotion"></div>
         <figcaption>Same room, same night &mdash; beginners through to blue belts</figcaption>
       </figure>
-      <figure class="fig m-tall rv">
+      <figure class="fig m-half rv">
+        <div class="ph"><img loading="lazy" src="../assets/images/room-belt-promotion.jpg" alt="William Moraes presenting new blue belts to two members at Mentality Jiu Jitsu"></div>
+        <figcaption>Belt promotions &mdash; earned on the mat, not bought</figcaption>
+      </figure>
+      <figure class="fig m-half rv">
         <div class="ph"><img loading="lazy" src="../assets/images/room-competition-podium.jpg" alt="A Mentality Jiu Jitsu member on the podium at the BJJ National Australian Open"></div>
         <figcaption>Members competing at the National Australian Open</figcaption>
       </figure>

@@ -97,9 +97,7 @@ function syncLabel(){
 }
 syncLabel();
 tgl.addEventListener("click",function(){
-  var next = html.getAttribute("data-theme")==="dark"?"light":"dark";
-  html.setAttribute("data-theme", next);
-  try{ localStorage.setItem("mjj-theme", next); }catch(e){}
+  html.setAttribute("data-theme", html.getAttribute("data-theme")==="dark"?"light":"dark");
   syncLabel();
 });
 
@@ -109,7 +107,7 @@ var hero=document.querySelector(".hero"),
     heroPanels=document.getElementById("heroPanels"),
     media=document.getElementById("heroMedia"),
     tex=document.getElementById("tex"),
-    vidEl=document.querySelector("#heroVid video"),
+    vidEl=document.querySelector("#heroVid video, #heroVid img"),
     hint=document.getElementById("hint"),
     shift=document.getElementById("stripShift");
 var hasParallax = !!(hero && heroText && heroPanels && media && tex && hint && shift);

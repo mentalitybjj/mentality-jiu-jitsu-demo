@@ -10,21 +10,15 @@
 (function(){try{
   var d=document.documentElement;
   d.className+=" js";
-  var saved=null;
-  try{ saved=localStorage.getItem("mjj-theme"); }catch(e){}
-  if(saved==="light"||saved==="dark"){
-    d.setAttribute("data-theme", saved);
-  }else{
-    var m=window.matchMedia&&window.matchMedia("(prefers-color-scheme: light)").matches;
-    d.setAttribute("data-theme", m?"light":"dark");
-  }
+  var m=window.matchMedia&&window.matchMedia("(prefers-color-scheme: light)").matches;
+  d.setAttribute("data-theme", m?"light":"dark");
 }catch(e){}})();
 </script>
 <meta property="og:type" content="website">
 <meta property="og:title" content="What Happens in Your First Class — Mentality Jiu Jitsu">
 <meta property="og:description" content="Nervous about your first Brazilian Jiu Jitsu or Muay Thai class? Here's exactly what happens, minute by minute, at Mentality Jiu Jitsu in Tweed Heads South.">
 <meta property="og:url" content="https://REPLACE-WITH-LIVE-DOMAIN.example/first-class/">
-<meta property="og:image" content="https://REPLACE-WITH-LIVE-DOMAIN.example/assets/images/hero-poster.jpg">
+<meta property="og:image" content="https://REPLACE-WITH-LIVE-DOMAIN.example/assets/images/og-share.jpg">
 <meta property="og:locale" content="en_AU">
 <meta property="og:site_name" content="Mentality Jiu Jitsu">
 <meta name="twitter:card" content="summary_large_image">
@@ -205,12 +199,11 @@
   <div class="wrap">
     <div class="meet-greet rv">
       <div class="mg-media">
-        <img src="../assets/images/felipe.jpg" alt="Felipe Andrade, co-founder and coach at Mentality Jiu Jitsu" loading="lazy">
-        <img src="../assets/images/william.jpg" alt="William Moraes, co-founder and coach at Mentality Jiu Jitsu" loading="lazy">
+        <img src="../assets/images/william.jpg" alt="William Moraes, founder and coach at Mentality Jiu Jitsu" loading="lazy">
       </div>
       <div class="mg-body">
         <p class="eyebrow">Who you'll actually meet</p>
-        <p><strong>Felipe Andrade</strong> and <strong>William Moraes</strong> founded Mentality and still coach every class themselves. One of them will be the one greeting you at the door on your first night &mdash; so it's a familiar face, not a stranger behind a desk.</p>
+        <p><strong>William Moraes</strong> founded Mentality and still coaches on the mats himself. Chances are he'll be the one greeting you at the door on your first night &mdash; so it's a familiar face, not a stranger behind a desk.</p>
       </div>
     </div>
     <div class="timeline">
