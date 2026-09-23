@@ -551,6 +551,12 @@ footer.site{border-top:1px solid var(--line);padding:44px 0 110px;background:var
 .m-tall{grid-column:span 4}
 .m-wide{grid-column:span 8}
 .m-half{grid-column:span 6}
+/* Two equal photos side by side (e.g. Kids Jiu Jitsu page) — same 4:3 box so
+   they line up exactly regardless of source size */
+.photo-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.photo-pair .fig .ph{height:auto;aspect-ratio:4/3}
+.photo-pair .fig .ph img{object-position:center 50%}
+@media(max-width:700px){.photo-pair{grid-template-columns:1fr;gap:22px}}
 .m-half .ph img{object-position:center 22%}
 .m-tall .ph img{object-position:center 26%}
 .m-wide .ph img{object-position:center 32%}
