@@ -86,7 +86,7 @@ if(intro){
   });
   /* if the viewport grows past the mobile breakpoint while open, close it */
   window.addEventListener("resize", function(){
-    if(window.innerWidth > 1000) setOpen(false);
+    if(window.innerWidth > 1180) setOpen(false);
   }, {passive:true});
 })();
 
