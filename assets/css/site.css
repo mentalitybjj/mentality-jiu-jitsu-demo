@@ -610,6 +610,17 @@ footer.site{border-top:1px solid var(--line);padding:44px 0 110px;background:var
   .m-tall,.m-wide,.m-half{grid-column:1/-1}
   .fig .ph{height:auto;aspect-ratio:4/3}
 }
+/* ---- Liquid glass gallery (About "Inside the room") ----
+   site.js draws each photo onto a WebGL canvas (.glass-cv) layered over the
+   <img>; once it's ready the .ph gets .gl-on and the <img> is hidden (it
+   stays in the page for search engines and screen readers). Without WebGL
+   the normal image shows. */
+.mosaic-glass{counter-reset:fig}
+.mosaic-glass .ph .glass-cv{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none}
+.mosaic-glass .ph.gl-on img{opacity:0}
+.mosaic-glass .ph.gl-on{cursor:none}
+.mosaic-glass .ph.gl-on:hover img{transform:none}
+.mosaic-glass figcaption::before{counter-increment:fig;content:counter(fig,decimal-leading-zero) " / 08";display:inline-block;margin-right:12px;color:var(--fg);opacity:.55}
 
 
 /* ============ GRAIN ============ */

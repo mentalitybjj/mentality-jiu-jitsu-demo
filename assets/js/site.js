@@ -329,6 +329,169 @@ if("IntersectionObserver" in window && !reduce){
   });
 }else{ Array.prototype.forEach.call(document.querySelectorAll(".rv"),function(el){el.classList.add("in")}); }
 
+/* ---------- LIQUID GLASS GALLERY (About page "Inside the room") ----------
+   Each photo is redrawn on a small WebGL canvas so it can be distorted:
+   - it pours in from the bottom with a liquid edge the first time it's seen
+   - it ripples like liquid while the page is scrolling (stronger = faster)
+   - on desktop a glass lens follows the cursor: it magnifies and bends the
+     photo, splits colour at its rim, catches a highlight, and shows the
+     photo in colour while the rest stays black and white
+   - tiles near the middle of the screen fade to colour (so phones get colour)
+   If WebGL is unavailable, the page is opened from a file, or the visitor
+   prefers reduced motion, the normal <img> is left in place untouched. */
+(function(){
+  var grid=document.querySelector(".mosaic-glass"); if(!grid || reduce) return;
+  var fine=window.matchMedia && window.matchMedia("(hover:hover) and (pointer:fine)").matches;
+  var VS="attribute vec2 p;varying vec2 v;void main(){v=vec2(p.x*.5+.5,.5-p.y*.5);gl_Position=vec4(p,0.,1.);}";
+  var FS=[
+  "precision highp float;",
+  "uniform sampler2D T;uniform vec2 R,I,O,M;uniform float L,RAD,TM,RV,VEL,COL;varying vec2 v;",
+  "vec2 cover(vec2 u){float rs=R.x/R.y,ri=I.x/I.y;vec2 s=rs>ri?vec2(1.,ri/rs):vec2(rs/ri,1.);return u*s+(1.-s)*O;}",
+  "vec3 tex(vec2 u){return texture2D(T,clamp(cover(u),.001,.999)).rgb;}",
+  "vec3 grey(vec3 c,float k){float l=dot(c,vec3(.299,.587,.114));l=(l-.5)*1.05+.5;return mix(vec3(l),c,k);}",
+  "void main(){",
+  " vec2 u=v;",
+  /* liquid: settles as the tile is revealed, wakes up with scroll speed */
+  " float amp=(1.-RV)*.045+min(abs(VEL),1.)*.018;",
+  " u.x+=amp*(sin(u.y*11.+TM*2.2)*.6+sin(u.y*23.-TM*3.1+u.x*5.)*.4);",
+  " u.y+=amp*.6*cos(u.x*9.+TM*1.7);",
+  " u=(u-.5)*(1.-.06*(1.-RV))+.5;",
+  /* glass lens */
+  " vec2 px=v*R;vec2 d=px-M;float r=RAD*L;float len=length(d);float t=r>0.?len/r:2.;",
+  " float inL=r>0.?1.-smoothstep(r-1.5,r+.5,len):0.;",
+  " vec3 c;",
+  " if(inL>0.){",
+  "  float k=.46+.54*pow(t,2.2);",                                  /* magnify the middle */
+  "  vec2 dd=d*k;float ca=.045*pow(t,3.);",                          /* colour split at the rim */
+  "  vec2 base=(M+dd)/R;",
+  "  vec3 g=vec3(tex(base+dd/R*ca).r,tex(base).g,tex(base-dd/R*ca).b);",
+  "  vec2 n=len>0.?d/len:vec2(0.);",
+  "  float rim=smoothstep(.78,1.,t);",
+  "  float spec=rim*max(0.,dot(n,normalize(vec2(-.7,-1.))));",       /* highlight top-left */
+  "  float glow=(1.-smoothstep(0.,.55,length((d/r)-vec2(-.35,-.42))))*.22;",
+  "  float line=smoothstep(.93,.985,t)*(1.-smoothstep(.985,1.,t));",
+  "  g=g*(1.-.14*rim)+vec3(spec*.7+glow+line*.35);",
+  "  vec3 o=grey(tex(u),COL);",
+  "  c=mix(o,g,inL);",
+  " } else {",
+  "  c=grey(tex(u),COL);",
+  "  float sh=r>0.?smoothstep(r+14.,r,len)*.16:0.;c*=1.-sh;",          /* soft shadow round the lens */
+  " }",
+  /* liquid pour-in from the bottom */
+  " float lvl=RV*1.25;float edge=(1.-v.y)+.035*sin(v.x*9.+TM*3.)+.02*sin(v.x*23.-TM*4.);",
+  " float a=1.-smoothstep(lvl-.07,lvl,edge);",
+  " gl_FragColor=vec4(c*a,a);",
+  "}"].join("\n");
+
+  function mk(gl,type,src){var s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);
+    if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s)); return s;}
+
+  var tiles=[], vel=0, lastY=window.scrollY, running=false, t0=performance.now();
+
+  Array.prototype.forEach.call(grid.querySelectorAll(".fig"),function(fig){
+    var ph=fig.querySelector(".ph"), img=ph && ph.querySelector("img"); if(!img) return;
+    var pos=(img.style.objectPosition||"50% 50%").split(" ").map(function(s){return parseFloat(s)/100;});
+    tiles.push({fig:fig,ph:ph,img:img,O:[pos[0]||.5,isNaN(pos[1])?.5:pos[1]],gl:null,
+      rv:0,rvGo:false,lens:0,lensT:0,mx:0,my:0,tx:0,ty:0,col:0,colT:0,vis:false,dirty:true});
+  });
+
+  function init(t){
+    if(t.gl||t.failed) return;
+    var cv=document.createElement("canvas"); cv.className="glass-cv"; cv.setAttribute("aria-hidden","true");
+    var gl=cv.getContext("webgl",{premultipliedAlpha:true,alpha:true,antialias:false});
+    if(!gl){ t.failed=true; return; }
+    try{
+      var pr=gl.createProgram();
+      gl.attachShader(pr,mk(gl,gl.VERTEX_SHADER,VS)); gl.attachShader(pr,mk(gl,gl.FRAGMENT_SHADER,FS));
+      gl.linkProgram(pr); if(!gl.getProgramParameter(pr,gl.LINK_STATUS)) throw new Error("link");
+      gl.useProgram(pr);
+      var b=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,b);
+      gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+      var loc=gl.getAttribLocation(pr,"p"); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+      var tx=gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D,tx);
+      [gl.TEXTURE_WRAP_S,gl.TEXTURE_WRAP_T].forEach(function(w){gl.texParameteri(gl.TEXTURE_2D,w,gl.CLAMP_TO_EDGE);});
+      gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+      var U={}; ["T","R","I","O","M","L","RAD","TM","RV","VEL","COL"].forEach(function(n){U[n]=gl.getUniformLocation(pr,n);});
+      t.cv=cv; t.U=U;
+      var go=function(){
+        try{
+          gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,t.img);
+          gl.uniform2f(U.I,t.img.naturalWidth,t.img.naturalHeight);
+          gl.uniform2f(U.O,t.O[0],t.O[1]);
+          t.gl=gl; t.ph.appendChild(cv); size(t); t.ph.classList.add("gl-on"); t.dirty=true; kick();
+        }catch(e){ t.failed=true; }   /* e.g. opened from file:// — keep the plain image */
+      };
+      t.img.loading="eager";
+      if(t.img.complete && t.img.naturalWidth) go(); else t.img.addEventListener("load",go,{once:true});
+    }catch(e){ t.failed=true; }
+  }
+  function size(t){
+    if(!t.gl) return;
+    var r=t.ph.getBoundingClientRect(), d=Math.min(window.devicePixelRatio||1,2);
+    t.w=r.width; t.h=r.height;
+    t.cv.width=Math.max(1,Math.round(r.width*d)); t.cv.height=Math.max(1,Math.round(r.height*d)); t.dpr=d;
+    t.gl.viewport(0,0,t.cv.width,t.cv.height); t.dirty=true;
+  }
+
+  function draw(t,now){
+    var gl=t.gl,U=t.U,d=t.dpr;
+    gl.uniform2f(U.R,t.cv.width,t.cv.height);
+    gl.uniform2f(U.M,t.mx*d,t.my*d);
+    gl.uniform1f(U.L,t.lens); gl.uniform1f(U.RAD,Math.min(t.w,t.h)*.26*d);
+    gl.uniform1f(U.TM,(now-t0)/1000); gl.uniform1f(U.RV,t.rv);
+    gl.uniform1f(U.VEL,vel); gl.uniform1f(U.COL,t.col);
+    gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+  }
+
+  function frame(now){
+    running=false;
+    var y=window.scrollY, dy=y-lastY; lastY=y;
+    vel+=(dy/40-vel)*.18; if(Math.abs(vel)<.002) vel=0;
+    var vh=window.innerHeight, busy=vel!==0;
+    tiles.forEach(function(t){
+      if(!t.gl || !t.vis) return;
+      var r=t.ph.getBoundingClientRect();
+      if(!t.rvGo && r.top<vh*.92){ t.rvGo=true; }
+      if(t.rvGo && t.rv<1){ t.rv=Math.min(1,t.rv+.018); t.dirty=true; }
+      var off=((r.top+r.height/2)-vh/2)/vh;
+      /* colour when centred; while the lens is out the rest drops to grey so the glass "reveals" colour */
+      t.colT=t.lensT>0?0:((Math.abs(off)<.24 && t.rv>=1)?1:0);
+      var pc=t.col; t.col+=(t.colT-t.col)*.08; if(Math.abs(t.colT-t.col)<.003) t.col=t.colT;
+      var pl=t.lens; t.lens+=(t.lensT-t.lens)*.14; if(Math.abs(t.lensT-t.lens)<.003) t.lens=t.lensT;
+      var pmx=t.mx,pmy=t.my; t.mx+=(t.tx-t.mx)*.2; t.my+=(t.ty-t.my)*.2;
+      var moving=Math.abs(t.tx-t.mx)>.3||Math.abs(t.ty-t.my)>.3;
+      if(pc!==t.col||pl!==t.lens||moving||pmx!==t.mx||pmy!==t.my) t.dirty=true;
+      if(vel!==0 || t.rv<1) t.dirty=true;
+      if(t.dirty){ draw(t,now); t.dirty=false; busy=true; }
+      if(t.rv<1 || t.col!==t.colT || t.lens!==t.lensT || moving) busy=true;
+    });
+    if(busy) kick();
+  }
+  function kick(){ if(!running){ running=true; requestAnimationFrame(frame); } }
+
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      var t=tiles.filter(function(x){return x.fig===e.target;})[0]; if(!t) return;
+      t.vis=e.isIntersecting; if(t.vis){ init(t); t.dirty=true; kick(); }
+    });
+  },{rootMargin:"250px 0px"});
+  tiles.forEach(function(t){ io.observe(t.fig); });
+
+  window.addEventListener("scroll",kick,{passive:true});
+  window.addEventListener("resize",function(){ tiles.forEach(size); kick(); },{passive:true});
+
+  if(!fine) return;
+  tiles.forEach(function(t){
+    t.ph.addEventListener("pointerenter",function(ev){
+      var b=t.ph.getBoundingClientRect(); t.tx=t.mx=ev.clientX-b.left; t.ty=t.my=ev.clientY-b.top; t.lensT=1; kick();
+    });
+    t.ph.addEventListener("pointermove",function(ev){
+      var b=t.ph.getBoundingClientRect(); t.tx=ev.clientX-b.left; t.ty=ev.clientY-b.top; t.lensT=1; kick();
+    });
+    t.ph.addEventListener("pointerleave",function(){ t.lensT=0; kick(); });
+  });
+})();
+
 /* ---------- TIMETABLE (only on pages with the widget) ---------- */
 var todayIdx=(new Date().getDay()+6)%7,curDay=DAYS[todayIdx],curFilter="all";
 var daysEl=document.getElementById("days"),slotsEl=document.getElementById("slots");
