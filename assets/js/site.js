@@ -492,6 +492,49 @@ if("IntersectionObserver" in window && !reduce){
   });
 })();
 
+/* ---------- FILM REVEAL (portrait program videos) ----------
+   Each .film-reveal starts as a thin bright slit. When ~40% of it is on
+   screen it opens out (CSS keyframes), then the video starts and the
+   caption slides in. Clips in the same row open one after another.
+   After that, videos pause whenever they're off screen to save battery. */
+(function(){
+  var els=Array.prototype.slice.call(document.querySelectorAll(".film-reveal")); if(!els.length) return;
+  function play(v){ if(!v) return; try{ var q=v.play(); if(q&&q.catch) q.catch(function(){}); }catch(e){} }
+  function pause(v){ if(!v) return; try{ v.pause(); }catch(e){} }
+  if(reduce || !("IntersectionObserver" in window)){
+    els.forEach(function(el){ el.classList.add("is-revealed"); var v=el.querySelector("video");
+      if(v && reduce){ v.controls=true; v.removeAttribute("autoplay"); } else play(v); });
+    return;
+  }
+  els.forEach(function(el){
+    var sib=Array.prototype.filter.call(el.parentElement.children,function(c){return c.classList.contains("film-reveal");});
+    el.style.setProperty("--frd",(sib.indexOf(el)*180)+"ms");
+    var v=el.querySelector("video"); if(v){ v.removeAttribute("autoplay"); pause(v); }
+  });
+  var seen=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(!e.isIntersecting) return;
+      var el=e.target, fr=el.querySelector(".fr-frame"), v=el.querySelector("video");
+      seen.unobserve(el);
+      el.classList.add("is-revealing");
+      var done=false, finish=function(){ if(done) return; done=true;
+        el.classList.remove("is-revealing"); el.classList.add("is-revealed"); el.dataset.live="1";
+        if(el.dataset.onscreen!=="0") play(v); };
+      fr.addEventListener("animationend",function(ev){ if(ev.animationName==="frOpen") finish(); });
+      setTimeout(finish,1350+parseInt(getComputedStyle(el).getPropertyValue("--frd")||0,10)+400); /* safety net */
+    });
+  },{threshold:.4});
+  var vis=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      var el=e.target, v=el.querySelector("video");
+      el.dataset.onscreen=e.isIntersecting?"1":"0";
+      if(el.dataset.live!=="1") return;
+      e.isIntersecting ? play(v) : pause(v);
+    });
+  },{threshold:.05});
+  els.forEach(function(el){ seen.observe(el); vis.observe(el); });
+})();
+
 /* ---------- TIMETABLE (only on pages with the widget) ---------- */
 var todayIdx=(new Date().getDay()+6)%7,curDay=DAYS[todayIdx],curFilter="all";
 var daysEl=document.getElementById("days"),slotsEl=document.getElementById("slots");

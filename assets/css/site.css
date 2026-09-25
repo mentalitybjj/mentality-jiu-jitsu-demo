@@ -623,6 +623,52 @@ footer.site{border-top:1px solid var(--line);padding:44px 0 110px;background:var
 .mosaic-glass figcaption::before{counter-increment:fig;content:counter(fig,decimal-leading-zero) " / 08";display:inline-block;margin-right:12px;color:var(--fg);opacity:.55}
 
 
+/* ============ FILM REVEAL (portrait program videos) ============
+   Markup:
+   <figure class="film-reveal">
+     <div class="fr-frame"><video muted loop playsinline preload="metadata" poster="..."><source src="..." type="video/mp4"></video><span class="fr-grain" aria-hidden="true"></span></div>
+     <figcaption class="fr-cap">Caption</figcaption>
+   </figure>
+   Sequence (site.js adds the classes when it scrolls into view):
+   thin bright slit -> opens to full 9:16 with a horizontal wobble + colour
+   fringe -> grain flares then fades -> video plays -> caption slides in. */
+.film-reveal{margin:0;min-width:0}
+.fr-frame{position:relative;aspect-ratio:9/16;overflow:hidden;background:#0c0c0c;border:1px solid var(--line);transform-origin:50% 50%}
+.fr-frame video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.fr-grain{position:absolute;inset:-20%;pointer-events:none;opacity:0;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.4 -.2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:180px 180px}
+.fr-cap{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:12px;line-height:1.5}
+html.js .film-reveal .fr-frame{transform:scaleY(.035) scaleX(1.14);filter:brightness(2.2) contrast(1.3)}
+html.js .film-reveal .fr-cap{opacity:0;transform:translateY(14px);clip-path:inset(0 0 100% 0)}
+html.js .film-reveal.is-revealing .fr-frame{animation:frOpen 1.35s cubic-bezier(.7,0,.2,1) var(--frd,0ms) both}
+html.js .film-reveal.is-revealing .fr-grain{animation:frGrain 2s ease var(--frd,0ms) both,frGrainShift .24s steps(4) infinite}
+html.js .film-reveal.is-revealed .fr-frame{transform:none;filter:none;animation:none}
+html.js .film-reveal.is-revealed .fr-cap{opacity:1;transform:none;clip-path:inset(0 0 0 0);
+  transition:opacity .6s ease .15s,transform .7s cubic-bezier(.16,1,.3,1) .15s,clip-path .7s cubic-bezier(.16,1,.3,1) .15s}
+@keyframes frOpen{
+  0%  {transform:scaleY(.035) scaleX(1.14);filter:brightness(2.2) contrast(1.3)}
+  28% {transform:scaleY(.07) scaleX(1.1);filter:brightness(1.9) contrast(1.25)}
+  68% {transform:scaleY(1.02) scaleX(.982) skewX(-1.4deg);filter:brightness(1.12) drop-shadow(4px 0 0 rgba(255,40,40,.45)) drop-shadow(-4px 0 0 rgba(40,170,255,.45))}
+  80% {transform:scaleY(.994) scaleX(1.014) skewX(.9deg) translateX(-4px);filter:brightness(.92) drop-shadow(-3px 0 0 rgba(255,40,40,.35)) drop-shadow(3px 0 0 rgba(40,170,255,.35))}
+  90% {transform:scaleY(1) scaleX(.996) skewX(-.35deg) translateX(2px);filter:brightness(1.04)}
+  100%{transform:none;filter:none}
+}
+@keyframes frGrain{0%{opacity:0}30%{opacity:.6}65%{opacity:.4}100%{opacity:0}}
+@keyframes frGrainShift{0%{transform:translate(0,0)}25%{transform:translate(-7%,4%)}50%{transform:translate(5%,-6%)}75%{transform:translate(-3%,-8%)}100%{transform:translate(0,0)}}
+@media(prefers-reduced-motion:reduce){
+  html.js .film-reveal .fr-frame,html.js .film-reveal .fr-cap{transform:none!important;filter:none!important;opacity:1!important;clip-path:none!important;animation:none!important}
+}
+/* Layout A: one tall video beside a short story */
+.film-feature{display:grid;grid-template-columns:minmax(0,380px) minmax(0,1fr);gap:clamp(28px,5vw,72px);align-items:center}
+.film-feature .ff-copy .h-lg{margin:12px 0 18px}
+.film-feature .ff-copy p:not(.eyebrow){color:var(--muted);font-size:15.5px;line-height:1.65;max-width:50ch}
+@media(max-width:800px){.film-feature{grid-template-columns:1fr}.film-feature .film-reveal{max-width:420px}}
+/* Layout B: a row of 2-3 tall clips (swipeable on phones) */
+.film-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.film-row.two{grid-template-columns:repeat(2,minmax(0,1fr));max-width:820px}
+@media(max-width:800px){.film-row,.film-row.two{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;margin:0 calc(var(--gut)*-1);padding:0 var(--gut) 8px;max-width:none}
+  .film-row .film-reveal{flex:0 0 72%;scroll-snap-align:center}}
+
 /* ============ GRAIN ============ */
 .grain{position:fixed;inset:0;z-index:250;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
