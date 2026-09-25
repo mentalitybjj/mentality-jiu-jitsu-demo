@@ -1,9 +1,26 @@
+# Mentality Jiu Jitsu — https://mentalityjiujitsu.com
+# Search engines and AI assistants are welcome to crawl and cite this site.
 User-agent: *
 Allow: /
-Disallow: /brazilian-jiu-jitsu/
-Disallow: /muay-thai/
-Disallow: /kids-jiu-jitsu/
 Disallow: /privacy/
 Disallow: /terms/
 
-Sitemap: https://REPLACE-WITH-LIVE-DOMAIN.example/sitemap.xml
+# AI search / answer engines (explicitly allowed)
+User-agent: GPTBot
+Allow: /
+User-agent: OAI-SearchBot
+Allow: /
+User-agent: ChatGPT-User
+Allow: /
+User-agent: ClaudeBot
+Allow: /
+User-agent: Claude-SearchBot
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+User-agent: Google-Extended
+Allow: /
+User-agent: Applebot-Extended
+Allow: /
+
+Sitemap: https://mentalityjiujitsu.com/sitemap.xml

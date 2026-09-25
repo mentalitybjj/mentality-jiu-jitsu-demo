@@ -39,7 +39,7 @@ var SPREADSHEET_ID = "";
 
 // Public URL of the beginner's guide PDF. Must be reachable with a plain
 // GET (no login) — this is what gets fetched and attached to the email.
-var GUIDE_PDF_URL = "https://mentalitybjj.github.io/Mentality-Jiu-Jitsu-Your-First-Month.pdf";
+var GUIDE_PDF_URL = "https://mentalityjiujitsu.com/assets/docs/Mentality-Jiu-Jitsu-Your-First-Month.pdf";
 
 // Used only to sign the footer of the branded contact-form email below.
 // Keep these in sync with common.py on the site side if they ever change.

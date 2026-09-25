@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://REPLACE-WITH-LIVE-DOMAIN.example/</loc></url>
-  <url><loc>https://REPLACE-WITH-LIVE-DOMAIN.example/adults-beginners/</loc></url>
-  <url><loc>https://REPLACE-WITH-LIVE-DOMAIN.example/first-class/</loc></url>
-  <url><loc>https://REPLACE-WITH-LIVE-DOMAIN.example/timetable/</loc></url>
-  <url><loc>https://REPLACE-WITH-LIVE-DOMAIN.example/membership/</loc></url>
-  <url><loc>https://REPLACE-WITH-LIVE-DOMAIN.example/competition/</loc></url>
-  <url><loc>https://REPLACE-WITH-LIVE-DOMAIN.example/about/</loc></url>
-  <url><loc>https://REPLACE-WITH-LIVE-DOMAIN.example/reviews/</loc></url>
-  <url><loc>https://REPLACE-WITH-LIVE-DOMAIN.example/visit/</loc></url>
-  <url><loc>https://REPLACE-WITH-LIVE-DOMAIN.example/shop/</loc></url>
-  <url><loc>https://REPLACE-WITH-LIVE-DOMAIN.example/faq/</loc></url>
+  <url><loc>https://mentalityjiujitsu.com/</loc><lastmod>2026-09-25</lastmod></url>
+  <url><loc>https://mentalityjiujitsu.com/adults-beginners/</loc><lastmod>2026-09-25</lastmod></url>
+  <url><loc>https://mentalityjiujitsu.com/first-class/</loc><lastmod>2026-09-25</lastmod></url>
+  <url><loc>https://mentalityjiujitsu.com/timetable/</loc><lastmod>2026-09-25</lastmod></url>
+  <url><loc>https://mentalityjiujitsu.com/membership/</loc><lastmod>2026-09-25</lastmod></url>
+  <url><loc>https://mentalityjiujitsu.com/brazilian-jiu-jitsu/</loc><lastmod>2026-09-25</lastmod></url>
+  <url><loc>https://mentalityjiujitsu.com/kids-jiu-jitsu/</loc><lastmod>2026-09-25</lastmod></url>
+  <url><loc>https://mentalityjiujitsu.com/muay-thai/</loc><lastmod>2026-09-25</lastmod></url>
+  <url><loc>https://mentalityjiujitsu.com/competition/</loc><lastmod>2026-09-25</lastmod></url>
+  <url><loc>https://mentalityjiujitsu.com/about/</loc><lastmod>2026-09-25</lastmod></url>
+  <url><loc>https://mentalityjiujitsu.com/reviews/</loc><lastmod>2026-09-25</lastmod></url>
+  <url><loc>https://mentalityjiujitsu.com/visit/</loc><lastmod>2026-09-25</lastmod></url>
+  <url><loc>https://mentalityjiujitsu.com/shop/</loc><lastmod>2026-09-25</lastmod></url>
+  <url><loc>https://mentalityjiujitsu.com/faq/</loc><lastmod>2026-09-25</lastmod></url>
 </urlset>
