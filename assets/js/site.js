@@ -508,7 +508,8 @@ if("IntersectionObserver" in window && !reduce){
   }
   els.forEach(function(el){
     var sib=Array.prototype.filter.call(el.parentElement.children,function(c){return c.classList.contains("film-reveal");});
-    el.style.setProperty("--frd",(sib.indexOf(el)*180)+"ms");
+    var gtc=getComputedStyle(el.parentElement).gridTemplateColumns, cols=(gtc&&gtc!=="none")?gtc.split(" ").length:sib.length;
+    el.style.setProperty("--frd",((sib.indexOf(el)%cols)*(cols>3?120:180))+"ms");
     var v=el.querySelector("video"); if(v){ v.removeAttribute("autoplay"); pause(v); }
   });
   var seen=new IntersectionObserver(function(es){
