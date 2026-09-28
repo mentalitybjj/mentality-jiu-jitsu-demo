@@ -12,6 +12,7 @@
   d.className+=" js";
   var m=window.matchMedia&&window.matchMedia("(prefers-color-scheme: light)").matches;
   d.setAttribute("data-theme", m?"light":"dark");
+  try{ if(sessionStorage.getItem("mjjIntro")==="1") d.className+=" intro-seen"; }catch(e){}
 }catch(e){}})();
 </script>
 <meta property="og:type" content="website">
@@ -36,7 +37,7 @@
 <meta property="og:image:width" content="900">
 <meta property="og:image:height" content="473">
 <meta property="og:image:alt" content="Mentality Jiu Jitsu members after a belt promotion in Tweed Heads South">
-<link rel="stylesheet" href="assets/css/site.css?v=20260928c">
+<link rel="stylesheet" href="assets/css/site.css?v=20260929">
 <script type="application/ld+json">
 {
  "@context": "https://schema.org",
@@ -249,7 +250,8 @@
 
 <section class="hero" id="top">
   <div class="hero-vid" id="heroVid">
-    <video id="bgvid" autoplay muted loop playsinline preload="auto" poster="assets/images/hero-poster.jpg?v=4" aria-hidden="true">
+    <video id="bgvid" autoplay muted loop playsinline preload="auto" poster="assets/images/hero-poster.webp?v=4" aria-hidden="true">
+      <source src="assets/video/hero-mobile.mp4?v=5" type="video/mp4" media="(max-width:700px)">
       <source src="assets/video/hero.mp4?v=4" type="video/mp4">
     </video>
   </div>
@@ -304,7 +306,7 @@
       <p class="lede">William founded Mentality, and he's still the one on the mats. Small enough that the coaches know your name and what you're working on. Big enough that there's always someone your size to train with.</p></div>
     <div class="founders-row solo">
       <a class="founder-card rv" href="about/#william" aria-label="Read William Moraes's full bio and qualifications">
-        <img src="assets/images/william.jpg" alt="William Moraes, founder and head coach at Mentality Jiu Jitsu" loading="lazy">
+        <picture><source type="image/webp" srcset="assets/images/william.webp"><img decoding="async" width="900" height="1200" src="assets/images/william.jpg" alt="William Moraes, founder and head coach at Mentality Jiu Jitsu" loading="lazy"></picture>
         <div class="founder-body"><h3>William Moraes</h3><p class="role">Founder &amp; Head Coach</p><p>Black belt under Professor Vicente Cavalcanti, Queensland State and NAGA champion, with No-Gi super-fight appearances at K1 Destroyer and Sprawl.</p><p class="founder-more">Full bio &amp; belt history &rarr;</p></div>
       </a>
     </div>
@@ -333,15 +335,15 @@
       <p class="lede">Adults, kids, and striking. Every program has a starting point for people with zero experience &mdash; you are never dropped into something you are not ready for.</p>
     </div>
     <div class="cols-3">
-      <article class="prog rv"><div class="ph prog-media"><img loading="lazy" src="assets/images/bjj-main.jpg?v=2" alt="A black belt coach passing the guard of a purple belt during Gi training at Mentality Jiu Jitsu"></div><p class="prog-tag">Adults &middot; 16+</p><h3>Brazilian<br>Jiu Jitsu</h3>
+      <article class="prog rv"><div class="ph prog-media"><picture><source type="image/webp" srcset="assets/images/bjj-main.webp?v=2"><img decoding="async" width="1600" height="1200" loading="lazy" src="assets/images/bjj-main.jpg?v=2" alt="A black belt coach passing the guard of a purple belt during Gi training at Mentality Jiu Jitsu"></picture></div><p class="prog-tag">Adults &middot; 16+</p><h3>Brazilian<br>Jiu Jitsu</h3>
         <p>Grappling and ground control. No striking, no getting hit. It rewards technique and patience over size and aggression, which is exactly why it works for people starting in their thirties and forties.</p>
         <ul><li>Gi and No Gi sessions</li><li>Beginners paired with experienced training partners</li><li>Weekday evenings, plus Tuesday and Thursday lunch</li></ul>
         <a href="brazilian-jiu-jitsu/" class="btn btn-sm btn-ghost btn-wide">About Brazilian Jiu Jitsu</a></article>
-      <article class="prog rv"><div class="ph prog-media"><img loading="lazy" src="assets/images/kids-class.jpg?v=2" alt="Kids Jiu Jitsu class with coach William Moraes at Mentality Jiu Jitsu"></div><p class="prog-tag">Kids &middot; Ages 4&ndash;14</p><h3>Kids<br>Jiu Jitsu</h3>
+      <article class="prog rv"><div class="ph prog-media"><picture><source type="image/webp" srcset="assets/images/kids-class.webp?v=2"><img decoding="async" width="1200" height="900" loading="lazy" src="assets/images/kids-class.jpg?v=2" alt="Kids Jiu Jitsu class with coach William Moraes at Mentality Jiu Jitsu"></picture></div><p class="prog-tag">Kids &middot; Ages 4&ndash;14</p><h3>Kids<br>Jiu Jitsu</h3>
         <p>Two age groups so a four year old is never on the mat with a fourteen year old. We build confidence, listening, and the instincts to handle themselves, taught in a way that keeps it fun &mdash; and it has already produced kids champions on the competition mats.</p>
         <ul><li>Ages 4&ndash;7 and 8&ndash;14, taught separately</li><li>Weekday afternoons and Saturday mornings</li><li>Parents welcome to watch every session</li></ul>
         <a href="kids-jiu-jitsu/" class="btn btn-sm btn-ghost btn-wide">About Kids Jiu Jitsu</a></article>
-      <article class="prog rv"><div class="ph prog-media"><img src="assets/images/muay-thai-main.jpg" loading="lazy" alt="A member driving a knee into a kick shield during Muay Thai pad work at Mentality Jiu Jitsu"></div><p class="prog-tag">Adults &middot; 16+</p><h3>Muay<br>Thai</h3>
+      <article class="prog rv"><div class="ph prog-media"><picture><source type="image/webp" srcset="assets/images/muay-thai-main.webp"><img decoding="async" width="1600" height="1200" src="assets/images/muay-thai-main.jpg" loading="lazy" alt="A member driving a knee into a kick shield during Muay Thai pad work at Mentality Jiu Jitsu"></picture></div><p class="prog-tag">Adults &middot; 16+</p><h3>Muay<br>Thai</h3>
         <p>Striking, pads and conditioning. The fastest fitness in the building and the easiest place to start if you have never trained &mdash; you work at your own pace from the first round.</p>
         <ul><li>Technique, pad work and conditioning</li><li>Monday, Tuesday and Thursday evenings</li><li>Gloves available if you don't have your own</li></ul>
         <a href="muay-thai/" class="btn btn-sm btn-ghost btn-wide">About Muay Thai</a></article>
@@ -497,6 +499,6 @@
   </div>
 </div>
 
-<script src="assets/js/site.js?v=20260928c"></script>
+<script src="assets/js/site.js?v=20260929"></script>
 </body>
 </html>

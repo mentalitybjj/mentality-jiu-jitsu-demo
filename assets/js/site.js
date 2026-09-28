@@ -52,7 +52,8 @@ if(intro){
     body.classList.remove("lock"); body.classList.add("ready");
     setTimeout(function(){ if(intro.parentNode) intro.parentNode.removeChild(intro); },1100);
   };
-  if(reduce){ endIntro(); }
+  var seenIntro=false; try{ seenIntro=sessionStorage.getItem("mjjIntro")==="1"; sessionStorage.setItem("mjjIntro","1"); }catch(e){}
+  if(reduce || seenIntro){ endIntro(); }
   else{
     T.push(setTimeout(function(){ intro.classList.add("draw"); },140));
     T.push(setTimeout(function(){ intro.classList.add("shine"); },900));
@@ -66,6 +67,21 @@ if(intro){
   /* inner pages have no splash — they're ready immediately */
   body.classList.remove("lock"); body.classList.add("ready");
 }
+
+/* ---------- PHOTO FADE-IN ----------
+   Photos fade in once they've actually loaded instead of painting in
+   top-to-bottom. Anything already cached shows instantly. Failsafe: every
+   photo is shown after 4s no matter what. */
+(function(){
+  var imgs=document.querySelectorAll(".ph img, .coach img, .founder img, .shop-card img");
+  function show(i){ i.classList.add("is-loaded"); }
+  Array.prototype.forEach.call(imgs,function(i){
+    if(i.complete && i.naturalWidth){ show(i); return; }
+    i.addEventListener("load",function(){ show(i); },{once:true});
+    i.addEventListener("error",function(){ show(i); },{once:true});
+  });
+  setTimeout(function(){ Array.prototype.forEach.call(imgs,show); },4000);
+})();
 
 /* ---------- MOBILE MENU ---------- */
 (function(){
@@ -342,6 +358,17 @@ if("IntersectionObserver" in window && !reduce){
 (function(){
   var grid=document.querySelector(".mosaic-glass"); if(!grid || reduce) return;
   var fine=window.matchMedia && window.matchMedia("(hover:hover) and (pointer:fine)").matches;
+  /* Phones and tablets: skip WebGL (8 live canvases make scrolling heavy on
+     mobile). Photos simply turn to colour as they pass the middle of the screen. */
+  if(!fine){
+    if(!("IntersectionObserver" in window)) return;
+    grid.classList.add("glass-lite");
+    var mid=new IntersectionObserver(function(es){
+      es.forEach(function(e){ e.target.classList.toggle("is-mid",e.isIntersecting); });
+    },{rootMargin:"-30% 0px -30% 0px"});
+    Array.prototype.forEach.call(grid.querySelectorAll(".ph"),function(ph){ mid.observe(ph); });
+    return;
+  }
   var VS="attribute vec2 p;varying vec2 v;void main(){v=vec2(p.x*.5+.5,.5-p.y*.5);gl_Position=vec4(p,0.,1.);}";
   var FS=[
   "precision highp float;",
@@ -501,8 +528,20 @@ if("IntersectionObserver" in window && !reduce){
   var els=Array.prototype.slice.call(document.querySelectorAll(".film-reveal")); if(!els.length) return;
   function play(v){ if(!v) return; try{ var q=v.play(); if(q&&q.catch) q.catch(function(){}); }catch(e){} }
   function pause(v){ if(!v) return; try{ v.pause(); }catch(e){} }
+  /* Videos ship without a src (data-src) so they don't compete with photos
+     while the page loads. A whole row gets its sources attached once it's
+     within about a screen of the viewport; the clips a visitor sees first
+     buffer fully, the rest just fetch their first frames. */
+  function attach(el,full){
+    var v=el.querySelector("video"); if(!v || v.dataset.ready) return;
+    v.dataset.ready="1";
+    Array.prototype.forEach.call(v.querySelectorAll("source[data-src]"),function(s){ s.src=s.getAttribute("data-src"); s.removeAttribute("data-src"); });
+    v.preload=full?"auto":"metadata";
+    try{ v.load(); }catch(e){}
+  }
+  function upgrade(v){ if(v && v.preload!=="auto"){ v.preload="auto"; } }
   if(reduce || !("IntersectionObserver" in window)){
-    els.forEach(function(el){ el.classList.add("is-revealed"); var v=el.querySelector("video");
+    els.forEach(function(el){ attach(el,false); el.classList.add("is-revealed"); var v=el.querySelector("video");
       if(v && reduce){ v.controls=true; v.removeAttribute("autoplay"); } else play(v); });
     return;
   }
@@ -512,17 +551,40 @@ if("IntersectionObserver" in window && !reduce){
     el.style.setProperty("--frd",((sib.indexOf(el)%cols)*(cols>3?120:180))+"ms");
     var v=el.querySelector("video"); if(v){ v.removeAttribute("autoplay"); pause(v); }
   });
-  var seen=new IntersectionObserver(function(es){
+  var rows=[]; els.forEach(function(el){ if(rows.indexOf(el.parentElement)<0) rows.push(el.parentElement); });
+  var near=new IntersectionObserver(function(es){
     es.forEach(function(e){
-      if(!e.isIntersecting) return;
-      var el=e.target, fr=el.querySelector(".fr-frame"), v=el.querySelector("video");
+      if(!e.isIntersecting) return; near.unobserve(e.target);
+      var kids=Array.prototype.filter.call(e.target.children,function(c){return c.classList.contains("film-reveal");});
+      var gtc=getComputedStyle(e.target).gridTemplateColumns, cols=(gtc&&gtc!=="none")?gtc.split(" ").length:1;
+      kids.forEach(function(k,i){ attach(k,i<Math.max(cols,1)); });
+    });
+  },{rootMargin:"90% 0px 90% 0px"});
+  /* start only after the page (photos, fonts) has finished loading */
+  function watchRows(){ rows.forEach(function(r){ near.observe(r); }); }
+  if(document.readyState==="complete") watchRows(); else window.addEventListener("load",watchRows,{once:true});
+  function reveal(el){
+      var fr=el.querySelector(".fr-frame"), v=el.querySelector("video");
+      if(el.dataset.rv) return; el.dataset.rv="1";
       seen.unobserve(el);
+      attach(el,true); upgrade(v);
       el.classList.add("is-revealing");
       var done=false, finish=function(){ if(done) return; done=true;
         el.classList.remove("is-revealing"); el.classList.add("is-revealed"); el.dataset.live="1";
         if(el.dataset.onscreen!=="0") play(v); };
       fr.addEventListener("animationend",function(ev){ if(ev.animationName==="frOpen") finish(); });
       setTimeout(finish,1350+parseInt(getComputedStyle(el).getPropertyValue("--frd")||0,10)+400); /* safety net */
+  }
+  var seen=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(!e.isIntersecting) return;
+      reveal(e.target);
+      /* phone swipe rows: open the whole row together so the clips waiting
+         off to the side aren't left as thin slits */
+      var row=e.target.parentElement;
+      if(getComputedStyle(row).display==="flex"){
+        Array.prototype.forEach.call(row.children,function(c){ if(c.classList.contains("film-reveal")) reveal(c); });
+      }
     });
   },{threshold:.4});
   var vis=new IntersectionObserver(function(es){
