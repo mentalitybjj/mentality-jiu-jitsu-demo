@@ -156,11 +156,16 @@ header.stuck{background:var(--bg);background:color-mix(in srgb,var(--bg) 92%,tra
    Both elements sit well above the guidelines' print minimums
    (logomark 5mm, logotype 7mm) at every breakpoint. */
 .brand{display:flex;align-items:center;gap:13px;text-decoration:none;flex-shrink:0;line-height:0}
-.brand-mark{height:30px;width:auto;aspect-ratio:766.962/609.076;flex-shrink:0}
+/* The logomark uses pixel-snapped copies (#logo-31 / #logo-27 / #logo-37) drawn at
+   exactly these sizes, so every stroke sits on whole pixels and the left and right
+   sides render equally sharp. Keep these sizes in sync with the symbols. */
+.brand-mark{flex-shrink:0;display:block}
+.brand-mark.bm-d{width:39px;height:31px}
+.brand-mark.bm-m{display:none;width:34px;height:27px}
 .brand-txt{display:block}
 .brand .wordmark{width:clamp(136px,15vw,172px)}
 .brand small{display:block;font-family:var(--mono);font-size:8px;letter-spacing:.26em;color:var(--muted);font-weight:400;margin-top:6px;line-height:1}
-@media(max-width:600px){.brand{gap:10px}.brand-mark{height:26px}}
+@media(max-width:600px){.brand{gap:10px}.brand-mark.bm-d{display:none}.brand-mark.bm-m{display:block}}
 .nav-links{display:flex;gap:24px;margin-left:auto}
 .nav-links a{font-size:13px;text-decoration:none;color:var(--muted);transition:color .2s}
 .nav-links a:hover{color:var(--fg)}
@@ -522,7 +527,7 @@ a.count:hover .count-cta{opacity:1;color:var(--fg)}
 .price-note{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-top:22px}
 footer.site{border-top:1px solid var(--line);padding:44px 0 110px;background:var(--bg);color:var(--fg)}
 .foot-brand{gap:16px}
-.foot-brand .brand-mark{height:38px}
+.foot-brand .brand-mark{width:47px;height:37px}
 .foot-brand .wordmark{width:clamp(196px,26vw,260px)}
 .foot-col p{font-size:12.5px;color:var(--muted);margin-top:14px;line-height:1.6;max-width:34ch}
 .foot-col p.foot-contact{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:8px;max-width:none}
