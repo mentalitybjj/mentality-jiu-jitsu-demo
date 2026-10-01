@@ -31,7 +31,28 @@ var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce
    straight to Gymdesk's own signup page in a new tab. Change this one line
    if that URL is ever updated. */
 var GYMDESK_SIGNUP="https://mentality-jiu-jitsu.gymdesk.com/signup";
+/* ---------- CLASS SCHEDULE ----------
+   HOW TO EDIT
+   - SCHEDULE is the standing weekly timetable (in force from SCHEDULE_FROM).
+     t = time shown, h = start hour as a decimal (6:30 pm = 18.5),
+     n = class name, s = small line underneath, c = filter (bjj, kids, muaythai).
+   - HOLIDAYS: "YYYY-MM-DD":"Name" closes the gym that day. The timetable shows
+     the holiday instead of classes and the "next class" box skips it.
+   - CHANGES: one-off tweaks for a single date, e.g. drop a class by name.
+   Old dates can simply be deleted once they've passed. Dates are read in
+   gym time (Sydney), so visitors in other timezones see the right day. */
+var SCHEDULE_FROM="2026-10-06";
 var SCHEDULE={
+ Mon:[{t:"3:45 – 4:30 pm",h:15.75,n:"Kids BJJ",s:"Ages 4–7",c:"kids"},{t:"4:30 – 5:15 pm",h:16.5,n:"Kids BJJ",s:"Ages 8–14",c:"kids"},{t:"6:00 – 7:00 pm",h:18,n:"BJJ Gi",s:"Adults · all levels",c:"bjj"},{t:"7:00 – 8:00 pm",h:19,n:"Muay Thai",s:"Adults · all levels",c:"muaythai"}],
+ Tue:[{t:"12:00 – 1:00 pm",h:12,n:"BJJ No Gi",s:"Adults · lunchtime",c:"bjj"},{t:"3:45 – 4:30 pm",h:15.75,n:"Kids BJJ",s:"Ages 4–7",c:"kids"},{t:"4:30 – 5:15 pm",h:16.5,n:"Kids BJJ",s:"Ages 8–14",c:"kids"},{t:"6:00 – 7:00 pm",h:18,n:"Muay Thai",s:"Adults · all levels",c:"muaythai"},{t:"7:00 – 8:00 pm",h:19,n:"BJJ No Gi",s:"Adults · all levels",c:"bjj"}],
+ Wed:[{t:"3:45 – 4:30 pm",h:15.75,n:"Kids BJJ No Gi",s:"Ages 4–7",c:"kids"},{t:"4:30 – 5:15 pm",h:16.5,n:"Kids BJJ No Gi",s:"Ages 8–14",c:"kids"},{t:"6:00 – 7:00 pm",h:18,n:"BJJ Gi",s:"Adults · all levels",c:"bjj"}],
+ Thu:[{t:"12:00 – 1:00 pm",h:12,n:"BJJ Gi",s:"Adults · lunchtime",c:"bjj"},{t:"3:45 – 4:30 pm",h:15.75,n:"Kids BJJ",s:"Ages 4–7",c:"kids"},{t:"4:30 – 5:15 pm",h:16.5,n:"Kids BJJ",s:"Ages 8–14",c:"kids"},{t:"6:00 – 7:00 pm",h:18,n:"Muay Thai",s:"Adults · all levels",c:"muaythai"},{t:"7:00 – 8:00 pm",h:19,n:"BJJ No Gi",s:"Adults · all levels",c:"bjj"}],
+ Fri:[{t:"5:30 – 6:30 pm",h:17.5,n:"BJJ Gi",s:"Adults · all levels",c:"bjj"}],
+ Sat:[{t:"8:30 – 9:15 am",h:8.5,n:"Kids BJJ Gi",s:"Ages 4–7",c:"kids"},{t:"9:15 – 10:00 am",h:9.25,n:"Kids BJJ",s:"Ages 8–14",c:"kids"},{t:"10:00 – 11:00 am",h:10,n:"Open Mat",s:"All members",c:"bjj"}],
+ Sun:[]
+};
+/* the timetable that ran until 5 October 2026 */
+var SCHEDULE_BEFORE={
  Mon:[{t:"3:45 – 4:30 pm",h:15.75,n:"Kids BJJ",s:"Ages 4–7",c:"kids"},{t:"4:30 – 5:15 pm",h:16.5,n:"Kids BJJ",s:"Ages 8–14",c:"kids"},{t:"5:30 – 6:30 pm",h:17.5,n:"BJJ Gi",s:"Adults · all levels",c:"bjj"},{t:"6:30 – 7:30 pm",h:18.5,n:"Muay Thai",s:"Adults · all levels",c:"muaythai"}],
  Tue:[{t:"12:00 – 1:00 pm",h:12,n:"BJJ No Gi",s:"Adults · lunchtime",c:"bjj"},{t:"3:45 – 4:30 pm",h:15.75,n:"Kids BJJ",s:"Ages 4–7",c:"kids"},{t:"4:30 – 5:15 pm",h:16.5,n:"Kids BJJ",s:"Ages 8–14",c:"kids"},{t:"5:30 – 6:30 pm",h:17.5,n:"Muay Thai",s:"Adults · all levels",c:"muaythai"},{t:"6:30 – 7:30 pm",h:18.5,n:"BJJ No Gi",s:"Adults · all levels",c:"bjj"}],
  Wed:[{t:"3:45 – 4:30 pm",h:15.75,n:"Kids BJJ No Gi",s:"Ages 4–7",c:"kids"},{t:"4:30 – 5:15 pm",h:16.5,n:"Kids BJJ No Gi",s:"Ages 8–14",c:"kids"},{t:"5:30 – 6:30 pm",h:17.5,n:"BJJ Gi",s:"Adults · all levels",c:"bjj"}],
@@ -40,8 +61,33 @@ var SCHEDULE={
  Sat:[{t:"8:30 – 9:15 am",h:8.5,n:"Kids BJJ Gi",s:"Ages 4–7",c:"kids"},{t:"9:15 – 10:00 am",h:9.25,n:"Kids BJJ",s:"Ages 8–14",c:"kids"},{t:"10:00 – 11:00 am",h:10,n:"Open Mat",s:"All members",c:"bjj"}],
  Sun:[]
 };
+var HOLIDAYS={
+ "2026-10-05":"Labour Day"
+};
+var CHANGES={
+ "2026-10-02":{remove:["Open Mat"],note:"No Open Mat this Friday (2 Oct)"}
+};
 var DAYS=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
 var LABEL={bjj:"Adult BJJ",kids:"Kids BJJ",muaythai:"Muay Thai"};
+var FULLDAY={Mon:"Monday",Tue:"Tuesday",Wed:"Wednesday",Thu:"Thursday",Fri:"Friday",Sat:"Saturday",Sun:"Sunday"};
+var MONTHS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+function pad2(n){ return (n<10?"0":"")+n; }
+function ymd(d){ return d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-"+pad2(d.getDate()); }
+/* "now" on the gym's wall clock (Tweed Heads runs on Sydney time) */
+function gymNow(){
+  try{ var s=new Date().toLocaleString("en-US",{timeZone:"Australia/Sydney"}); var d=new Date(s); if(!isNaN(d)) return d; }catch(e){}
+  return new Date();
+}
+function addDays(d,n){ var x=new Date(d.getFullYear(),d.getMonth(),d.getDate()+n); return x; }
+/* everything on for one calendar date: {key, list, holiday, note} */
+function classesOn(d){
+  var key=DAYS[(d.getDay()+6)%7], id=ymd(d);
+  if(HOLIDAYS[id]) return {key:key,list:[],holiday:HOLIDAYS[id]};
+  var base=((id<SCHEDULE_FROM)?SCHEDULE_BEFORE:SCHEDULE)[key]||[];
+  var ch=CHANGES[id]||{};
+  var list=base.filter(function(s){ return !(ch.remove && ch.remove.indexOf(s.n)>=0); });
+  return {key:key,list:list,note:ch.note||""};
+}
 
 /* ---------- INTRO (homepage only) ---------- */
 var intro=document.getElementById("intro"),body=document.body,T=[];
@@ -190,19 +236,18 @@ function belt(){
 (function(){
   var w=document.getElementById("ncWhen"), t=document.getElementById("ncWhat");
   if(!w || !t) return;
-  var now=new Date(), nowIdx=(now.getDay()+6)%7, nowH=now.getHours()+now.getMinutes()/60;
-  var FULL={Mon:"Monday",Tue:"Tuesday",Wed:"Wednesday",Thu:"Thursday",Fri:"Friday",Sat:"Saturday",Sun:"Sunday"};
-  var found=null,offset=0;
-  for(var d=0; d<8 && !found; d++){
-    var key=DAYS[(nowIdx+d)%7], list=SCHEDULE[key]||[];
+  var now=gymNow(), nowH=now.getHours()+now.getMinutes()/60;
+  var found=null,offset=0,day=null;
+  for(var d=0; d<14 && !found; d++){
+    var on=classesOn(addDays(now,d)), list=on.list;
     for(var i=0;i<list.length;i++){
-      if(d>0 || list[i].h > nowH+0.25){ found=list[i]; offset=d; found._day=key; break; }
+      if(d>0 || list[i].h > nowH+0.25){ found=list[i]; offset=d; day=on.key; break; }
     }
   }
   if(!found){ w.textContent="See the timetable"; t.textContent="Classes run Monday to Saturday."; return; }
   var when = offset===0 ? "Today, "+found.t.split(" – ")[0]
            : offset===1 ? "Tomorrow, "+found.t.split(" – ")[0]
-           : FULL[found._day]+", "+found.t.split(" – ")[0];
+           : FULLDAY[day]+", "+found.t.split(" – ")[0];
   w.textContent=when;
   t.textContent=found.n+" · "+found.s;
 })();
@@ -598,26 +643,38 @@ if("IntersectionObserver" in window && !reduce){
   els.forEach(function(el){ seen.observe(el); vis.observe(el); });
 })();
 
-/* ---------- TIMETABLE (only on pages with the widget) ---------- */
-var todayIdx=(new Date().getDay()+6)%7,curDay=DAYS[todayIdx],curFilter="all";
+/* ---------- TIMETABLE (only on pages with the widget) ----------
+   Shows the next 7 days by date (today first), so holidays and one-off
+   changes appear on the right day. */
+var curIdx=0,curFilter="all";
 var daysEl=document.getElementById("days"),slotsEl=document.getElementById("slots");
 if(daysEl && slotsEl){
-DAYS.forEach(function(d,i){
+var today=gymNow(), WEEK=[];
+for(var di=0; di<7; di++){ var dd=addDays(today,di); WEEK.push({date:dd,on:classesOn(dd)}); }
+WEEK.forEach(function(x,i){
   var b=document.createElement("button");
-  b.className="day-btn"+(i===todayIdx?" today":"");
-  b.setAttribute("role","tab"); b.textContent=d;
-  b.setAttribute("aria-selected", d===curDay?"true":"false");
-  b.addEventListener("click",function(){ curDay=d; syncDays(); renderSlots(); });
+  b.className="day-btn"+(i===0?" today":"")+(x.on.holiday?" holiday":"");
+  b.setAttribute("role","tab"); b.dataset.i=i;
+  b.innerHTML=x.on.key+(i===0?' &bull;':'')+'<small>'+x.date.getDate()+" "+MONTHS[x.date.getMonth()]+(x.on.holiday?" &middot; Holiday":"")+'</small>';
+  b.setAttribute("aria-label",FULLDAY[x.on.key]+" "+x.date.getDate()+" "+MONTHS[x.date.getMonth()]+(x.on.holiday?", "+x.on.holiday+" public holiday":""));
+  b.addEventListener("click",function(){ curIdx=i; syncDays(); renderSlots(); });
   daysEl.appendChild(b);
 });
-function syncDays(){ Array.prototype.forEach.call(daysEl.children,function(b){ b.setAttribute("aria-selected", b.textContent===curDay?"true":"false"); }); }
+function syncDays(){ Array.prototype.forEach.call(daysEl.children,function(b){ b.setAttribute("aria-selected", +b.dataset.i===curIdx?"true":"false"); }); }
 function renderSlots(){
-  var list=(SCHEDULE[curDay]||[]).filter(function(s){return curFilter==="all"||s.c===curFilter});
-  if(!list.length){
-    slotsEl.innerHTML='<p class="slot-empty">No '+(curFilter==="all"?"":LABEL[curFilter].toLowerCase()+" ")+'classes on '+curDay+'day. Try another day, or <a href="'+GYMDESK_SIGNUP+'" target="_blank" rel="noopener">book a trial</a> and we\'ll find you a time.</p>';
+  var x=WEEK[curIdx], on=x.on, nice=FULLDAY[on.key]+" "+x.date.getDate()+" "+MONTHS[x.date.getMonth()];
+  if(on.holiday){
+    var next=null; for(var k=1;k<14 && !next;k++){ var nd=addDays(x.date,k), o=classesOn(nd); if(o.list.length) next=FULLDAY[o.key]+" "+nd.getDate()+" "+MONTHS[nd.getMonth()]; }
+    slotsEl.innerHTML='<div class="tt-holiday"><p class="eyebrow">Public holiday</p><h3>'+on.holiday+'</h3><p>The gym is closed on '+nice+' for the public holiday, so there are no classes that day. Enjoy the long weekend.'+(next?' Classes are back on '+next+'.':'')+'</p></div>';
     return;
   }
-  slotsEl.innerHTML=list.map(function(s){
+  var list=on.list.filter(function(s){return curFilter==="all"||s.c===curFilter});
+  var note=on.note?'<p class="tt-change">'+on.note+'</p>':'';
+  if(!list.length){
+    slotsEl.innerHTML=note+'<p class="slot-empty">No '+(curFilter==="all"?"":LABEL[curFilter].toLowerCase()+" ")+'classes on '+nice+'. Try another day, or <a href="'+GYMDESK_SIGNUP+'" target="_blank" rel="noopener">book a trial</a> and we\'ll find you a time.</p>';
+    return;
+  }
+  slotsEl.innerHTML=note+list.map(function(s){
     return '<div class="slot"><div class="slot-time">'+s.t+'</div><div class="slot-name">'+s.n+'<small>'+s.s+'</small></div><a href="'+GYMDESK_SIGNUP+'" target="_blank" rel="noopener" class="btn btn-sm btn-ghost">Try this class</a></div>';
   }).join("");
 }

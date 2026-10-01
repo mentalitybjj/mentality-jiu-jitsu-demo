@@ -302,7 +302,13 @@ body.ready .s5{transition-delay:.52s}
 .day-btn{font-family:var(--display);font-weight:500;font-size:13px;letter-spacing:.08em;text-transform:uppercase;padding:14px 18px;background:transparent;border:0;border-bottom:2px solid transparent;color:var(--muted);cursor:pointer;white-space:nowrap;transition:.18s}
 .day-btn:hover{color:var(--fg)}
 .day-btn[aria-selected="true"]{color:var(--fg);border-bottom-color:var(--fg)}
-.day-btn.today::after{content:"•";margin-left:6px}
+.day-btn.today::after{content:none}
+.day-btn small{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.1em;font-weight:400;margin-top:4px;opacity:.75}
+.day-btn.holiday small{color:var(--fg);opacity:1}
+.tt-holiday{border:1px solid var(--line);background:var(--surface);padding:28px 26px;margin:18px 0 6px}
+.tt-holiday h3{font-family:var(--display);font-weight:500;text-transform:uppercase;font-size:clamp(22px,3vw,30px);letter-spacing:-.01em;margin:8px 0 10px}
+.tt-holiday p:last-child{color:var(--muted);font-size:15px;line-height:1.6;max-width:60ch}
+.tt-change{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--fg);border:1px solid var(--line);background:var(--surface);padding:10px 14px;margin:16px 0 4px;display:inline-block}
 .slot{display:grid;grid-template-columns:150px 1fr auto;gap:18px;align-items:center;padding:17px 0;border-bottom:1px solid var(--line)}
 @media(max-width:760px){.slot{grid-template-columns:1fr auto;gap:8px 14px}.slot .slot-time{grid-column:1/-1}}
 .slot-time{font-family:var(--mono);font-size:13.5px;color:var(--muted);font-weight:400}
