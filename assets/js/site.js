@@ -159,9 +159,17 @@ function syncLabel(){
 }
 syncLabel();
 tgl.addEventListener("click",function(){
-  html.setAttribute("data-theme", html.getAttribute("data-theme")==="dark"?"light":"dark");
+  var next=html.getAttribute("data-theme")==="dark"?"light":"dark";
+  html.setAttribute("data-theme", next);
+  try{ localStorage.setItem("mjjTheme", next); }catch(e){}   /* remembered on every page */
   syncLabel();
 });
+/* no saved choice yet: follow the phone/computer if it switches light/dark */
+try{
+  var mq=window.matchMedia("(prefers-color-scheme: light)");
+  var follow=function(e){ var saved=null; try{ saved=localStorage.getItem("mjjTheme"); }catch(x){} if(!saved){ html.setAttribute("data-theme", e.matches?"light":"dark"); syncLabel(); } };
+  if(mq.addEventListener) mq.addEventListener("change",follow); else if(mq.addListener) mq.addListener(follow);
+}catch(e){}
 
 /* ---------- PARALLAX (video hero only — homepage) ---------- */
 var hero=document.querySelector(".hero"),
@@ -188,14 +196,25 @@ function resetParallaxStyles(){
     el.style.opacity="";
   });
 }
-var ticking=false,lastP=-1;
+var ticking=false,lastP=-1,gapMax=0;
+/* how far the hero text can drift before it would be sliced off by the
+   bottom edge of the hero — measured with the parallax transform removed */
+function measureGap(){
+  if(!hasParallax) return;
+  var keep=heroText.style.transform; heroText.style.transform="";
+  gapMax=Math.max(0, hero.getBoundingClientRect().bottom - heroText.getBoundingClientRect().bottom - 28);
+  heroText.style.transform=keep;
+}
+measureGap();
+window.addEventListener("resize",function(){ measureGap(); lastP=-1; },{passive:true});
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ measureGap(); lastP=-1; })["catch"](function(){});
 function para(){
   ticking=false;
   var h=hero.offsetHeight||1, y=window.scrollY, p=Math.min(y/h,1);
   if(p===lastP) return;
   lastP=p;
-  var d=y*0.34;
-  var o=(1-p*0.9).toFixed(3);
+  var d=Math.min(y*0.34, gapMax);
+  var o=Math.max(0,1-p*1.3).toFixed(3);
   heroText.style.transform="translate3d(0,"+d.toFixed(1)+"px,0)";
   heroText.style.opacity=o;
   heroPanels.style.opacity=o;
@@ -388,6 +407,17 @@ if("IntersectionObserver" in window && !reduce){
     rvCounts.set(p,n+1);
     el.style.transitionDelay=(Math.min(n,2)*70)+"ms"; io.observe(el);
   });
+  /* safety net: after a fast fling or a jump to an anchor, show anything the
+     visitor has already scrolled past so no block is ever left invisible */
+  var rvT=null;
+  window.addEventListener("scroll",function(){
+    clearTimeout(rvT);
+    rvT=setTimeout(function(){
+      Array.prototype.forEach.call(document.querySelectorAll(".rv:not(.in)"),function(el){
+        if(el.getBoundingClientRect().top < window.innerHeight){ el.classList.add("in"); io.unobserve(el); }
+      });
+    },160);
+  },{passive:true});
 }else{ Array.prototype.forEach.call(document.querySelectorAll(".rv"),function(el){el.classList.add("in")}); }
 
 /* ---------- LIQUID GLASS GALLERY (About page "Inside the room") ----------

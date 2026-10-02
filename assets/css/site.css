@@ -35,8 +35,11 @@
   --brand-black:#171717;
   --brand-white:#E9E5D9;
   --brand-grey:#75726B;
+  /* --muted is the brand grey nudged 30% toward the text colour so small body
+     copy meets the WCAG AA 4.5:1 contrast minimum on every surface. Logos keep
+     the exact brand grey (--brand-grey). */
 
-  --bg:#171717; --fg:#E9E5D9; --muted:#75726B; --line:rgba(233,229,217,.20);
+  --bg:#171717; --fg:#E9E5D9; --muted:#98948C; --line:rgba(233,229,217,.20);
   --surface:#222121; --surface-2:#2C2C2A; --veil:233,229,217;
   --display:'PP Neue Montreal',system-ui,sans-serif;
   --body:'Inter',system-ui,sans-serif;
@@ -44,15 +47,15 @@
   --gut:clamp(20px,5vw,64px);
 }
 html[data-theme="light"]{
-  --bg:#E9E5D9; --fg:#171717; --muted:#75726B; --line:rgba(23,23,23,.20);
+  --bg:#E9E5D9; --fg:#171717; --muted:#595752; --line:rgba(23,23,23,.20);
   --surface:#DFDBCF; --surface-2:#D4D0C6; --veil:23,23,23;
 }
 .band{
-  --bg:#E9E5D9; --fg:#171717; --muted:#75726B; --line:rgba(23,23,23,.20);
+  --bg:#E9E5D9; --fg:#171717; --muted:#595752; --line:rgba(23,23,23,.20);
   --surface:#DFDBCF; --surface-2:#D4D0C6; --veil:23,23,23;
 }
 html[data-theme="light"] .band{
-  --bg:#171717; --fg:#E9E5D9; --muted:#75726B; --line:rgba(233,229,217,.20);
+  --bg:#171717; --fg:#E9E5D9; --muted:#98948C; --line:rgba(233,229,217,.20);
   --surface:#222121; --surface-2:#2C2C2A; --veil:233,229,217;
 }
 
@@ -111,7 +114,7 @@ html.js #intro{display:block;position:fixed;inset:0;z-index:300;pointer-events:n
   background:linear-gradient(90deg,transparent,rgba(233,229,217,.10),rgba(233,229,217,.02),transparent);
   transform:skewX(-14deg)}
 #intro.shine .iv-streak{animation:blade 1.2s cubic-bezier(.42,0,.14,1) forwards}
-@keyframes blade{0%{left:-26vw;opacity:0}18%{opacity:1}100%{left:118vw;opacity:0}}
+@keyframes blade{0%{transform:translateX(0) skewX(-14deg);opacity:0}18%{opacity:1}100%{transform:translateX(144vw) skewX(-14deg);opacity:0}}
 
 .iv-word{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--brand-grey);opacity:0;transform:translateY(8px);
   transition:opacity .6s ease,transform .6s ease,letter-spacing .9s cubic-bezier(.16,1,.3,1)}
@@ -251,7 +254,7 @@ body.ready .s5{transition-delay:.52s}
    set from JS (see sizeHeroTicker) to match one copy exactly, so the window
    never clips a line. The track carries the motion, not the h1, so it
    never fights the .stage entrance transform. Pauses on hover. */
-.hero-ticker{overflow:hidden;
+.hero-ticker{overflow:hidden;margin:14px 0 22px;
   -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 14%,#000 86%,transparent 100%);
           mask-image:linear-gradient(180deg,transparent 0,#000 14%,#000 86%,transparent 100%)}
 .hero-ticker-track{display:flex;flex-direction:column;animation:heroTickerUp 24s linear infinite}
@@ -533,6 +536,7 @@ a.count:hover .count-cta{opacity:1;color:var(--fg)}
 .price-note{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-top:22px}
 footer.site{border-top:1px solid var(--line);padding:44px 0 110px;background:var(--bg);color:var(--fg)}
 .foot-brand{gap:16px}
+.foot-col a.foot-brand{color:var(--brand-grey)}
 .foot-brand .brand-mark{width:47px;height:37px}
 .foot-brand .wordmark{width:clamp(196px,26vw,260px)}
 .foot-col p{font-size:12.5px;color:var(--muted);margin-top:14px;line-height:1.6;max-width:34ch}
@@ -837,7 +841,7 @@ header.solid{background:var(--bg);background:color-mix(in srgb,var(--bg) 92%,tra
 .has-drop > a{display:flex;align-items:center;gap:5px}
 .has-drop > a::after{content:"";width:7px;height:7px;border-right:1.4px solid currentColor;border-bottom:1.4px solid currentColor;transform:rotate(45deg) translateY(-2px);transition:transform .2s}
 .drop-panel{position:absolute;top:100%;left:50%;transform:translateX(-50%) translateY(4px);min-width:230px;
-  background:var(--bg);background:color-mix(in srgb,var(--bg) 96%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  background:var(--bg);box-shadow:0 18px 40px rgba(0,0,0,.18);
   border:1px solid var(--line);padding:8px;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .18s ease,transform .18s ease}
 .has-drop:hover .drop-panel,.has-drop:focus-within .drop-panel{opacity:1;visibility:visible;pointer-events:auto;transform:translateX(-50%) translateY(0)}
 .has-drop:hover > a::after,.has-drop:focus-within > a::after{transform:rotate(225deg) translateY(2px)}
@@ -865,10 +869,11 @@ html.js body.menu-open{overflow:hidden;height:100vh;height:100svh}
   overflow-y:auto;-webkit-overflow-scrolling:touch}
 body.menu-open .mobile-menu{opacity:1;visibility:visible;pointer-events:auto;transform:translateY(0)}
 .mobile-menu nav{display:flex;flex-direction:column;padding:8px var(--gut) 28px}
-.mobile-menu nav a{padding:17px 2px;border-bottom:1px solid var(--line);font-family:var(--display);font-weight:500;font-size:19px;text-transform:uppercase;letter-spacing:-.01em;color:var(--fg);text-decoration:none}
+.mobile-menu nav a:not(.btn){padding:17px 2px;border-bottom:1px solid var(--line);font-family:var(--display);font-weight:500;font-size:19px;text-transform:uppercase;letter-spacing:-.01em;color:var(--fg);text-decoration:none}
 .mobile-menu .mm-sub{display:flex;flex-direction:column;padding-left:14px}
 .mobile-menu .mm-sub a{font-family:var(--body);font-weight:400;font-size:14px;text-transform:none;padding:13px 2px;color:var(--muted)}
-.mobile-menu .mm-cta{margin:22px var(--gut) 0}
+.mobile-menu .mm-cta{margin:24px 0 0}
+.mobile-menu .mm-cta .btn{width:100%;justify-content:center}
 @media(min-width:1181px){.mobile-menu{display:none}}
 
 /* ============ MULTI-PAGE: FOOTER GRID ============ */
