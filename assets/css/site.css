@@ -937,6 +937,13 @@ html.intro-seen #intro{display:none!important}
 /* phones: light version of the "Inside the room" gallery (no WebGL) */
 .mosaic-glass.glass-lite .ph.is-mid img{filter:grayscale(0) contrast(1)}
 
+/* ============ PHOTO ROW (any mix of portrait/landscape, equal heights, no cropping) ============
+   Each figure sets --ar (width/height of its photo); flex-grow follows it so heights match. */
+.photo-row{display:flex;gap:16px;align-items:flex-start}
+.photo-row .fig{flex:var(--ar) 1 0;min-width:0}
+.photo-row .fig .ph{height:auto;aspect-ratio:var(--ar)}
+@media(max-width:700px){.photo-row{display:grid;grid-template-columns:1fr;gap:22px}}
+
 /* ============ MOBILE POLISH ============
    Minimum readable size for the small mono labels, and comfortable tap
    areas for small text links, on phone widths. */
