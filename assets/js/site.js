@@ -433,7 +433,7 @@ if("IntersectionObserver" in window && !reduce){
 (function(){
   var grid=document.querySelector(".mosaic-glass"); if(!grid || reduce) return;
   var fine=window.matchMedia && window.matchMedia("(hover:hover) and (pointer:fine)").matches;
-  /* Phones and tablets: skip WebGL (8 live canvases make scrolling heavy on
+  /* Phones and tablets: skip WebGL (a page of live canvases makes scrolling heavy on
      mobile). Photos simply turn to colour as they pass the middle of the screen. */
   if(!fine){
     if(!("IntersectionObserver" in window)) return;
@@ -493,12 +493,21 @@ if("IntersectionObserver" in window && !reduce){
   Array.prototype.forEach.call(grid.querySelectorAll(".fig"),function(fig){
     var ph=fig.querySelector(".ph"), img=ph && ph.querySelector("img"); if(!img) return;
     var pos=(img.style.objectPosition||"50% 50%").split(" ").map(function(s){return parseFloat(s)/100;});
-    tiles.push({fig:fig,ph:ph,img:img,O:[pos[0]||.5,isNaN(pos[1])?.5:pos[1]],gl:null,
+    tiles.push({fig:fig,ph:ph,img:img,vid:ph.querySelector("video"),vt:-1,O:[pos[0]||.5,isNaN(pos[1])?.5:pos[1]],gl:null,
       rv:0,rvGo:false,lens:0,lensT:0,mx:0,my:0,tx:0,ty:0,col:0,colT:0,vis:false,dirty:true});
   });
 
+  /* Browsers only allow ~16 live WebGL canvases, so a tile only keeps its
+     canvas while it's near the screen; further away it hands it back and the
+     plain photo sits underneath until it's needed again. */
+  function release(t,lost){
+    if(!t.gl) return;
+    var gl=t.gl; t.gl=null; t.vt=-1;
+    t.ph.classList.remove("gl-on"); if(t.cv && t.cv.parentNode) t.cv.parentNode.removeChild(t.cv); t.cv=null;
+    if(!lost){ var x=gl.getExtension("WEBGL_lose_context"); if(x) x.loseContext(); }
+  }
   function init(t){
-    if(t.gl||t.failed) return;
+    if(t.gl||t.failed||t.pending) return;
     var cv=document.createElement("canvas"); cv.className="glass-cv"; cv.setAttribute("aria-hidden","true");
     var gl=cv.getContext("webgl",{premultipliedAlpha:true,alpha:true,antialias:false});
     if(!gl){ t.failed=true; return; }
@@ -514,8 +523,11 @@ if("IntersectionObserver" in window && !reduce){
       [gl.TEXTURE_WRAP_S,gl.TEXTURE_WRAP_T].forEach(function(w){gl.texParameteri(gl.TEXTURE_2D,w,gl.CLAMP_TO_EDGE);});
       gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
       var U={}; ["T","R","I","O","M","L","RAD","TM","RV","VEL","COL"].forEach(function(n){U[n]=gl.getUniformLocation(pr,n);});
-      t.cv=cv; t.U=U;
+      t.cv=cv; t.U=U; t.pending=true;
+      cv.addEventListener("webglcontextlost",function(){ if(t.cv===cv){ release(t,true); } },false);
       var go=function(){
+        t.pending=false;
+        if(!t.vis){ var x=gl.getExtension("WEBGL_lose_context"); if(x) x.loseContext(); return; }
         try{
           gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,t.img);
           gl.uniform2f(U.I,t.img.naturalWidth,t.img.naturalHeight);
@@ -525,7 +537,7 @@ if("IntersectionObserver" in window && !reduce){
       };
       t.img.loading="eager";
       if(t.img.complete && t.img.naturalWidth) go(); else t.img.addEventListener("load",go,{once:true});
-    }catch(e){ t.failed=true; }
+    }catch(e){ t.failed=true; t.pending=false; }
   }
   function size(t){
     if(!t.gl) return;
@@ -552,6 +564,16 @@ if("IntersectionObserver" in window && !reduce){
     var vh=window.innerHeight, busy=vel!==0;
     tiles.forEach(function(t){
       if(!t.gl || !t.vis) return;
+      /* video tile: copy each new video frame into the canvas */
+      var v=t.vid;
+      if(v && !v.paused && v.readyState>=2 && v.currentTime!==t.vt){
+        try{
+          t.gl.texImage2D(t.gl.TEXTURE_2D,0,t.gl.RGBA,t.gl.RGBA,t.gl.UNSIGNED_BYTE,v);
+          if(t.vt<0) t.gl.uniform2f(t.U.I,v.videoWidth,v.videoHeight);
+          t.vt=v.currentTime; t.dirty=true;
+        }catch(e){}
+      }
+      if(v && !v.paused) busy=true;
       var r=t.ph.getBoundingClientRect();
       if(!t.rvGo && r.top<vh*.92){ t.rvGo=true; }
       if(t.rvGo && t.rv<1){ t.rv=Math.min(1,t.rv+.018); t.dirty=true; }
@@ -574,7 +596,7 @@ if("IntersectionObserver" in window && !reduce){
   var io=new IntersectionObserver(function(es){
     es.forEach(function(e){
       var t=tiles.filter(function(x){return x.fig===e.target;})[0]; if(!t) return;
-      t.vis=e.isIntersecting; if(t.vis){ init(t); t.dirty=true; kick(); }
+      t.vis=e.isIntersecting; if(t.vis){ init(t); t.dirty=true; kick(); } else release(t);
     });
   },{rootMargin:"250px 0px"});
   tiles.forEach(function(t){ io.observe(t.fig); });
@@ -592,6 +614,25 @@ if("IntersectionObserver" in window && !reduce){
     });
     t.ph.addEventListener("pointerleave",function(){ t.lensT=0; kick(); });
   });
+})();
+
+/* ---------- GALLERY VIDEO (About "Inside the room") ----------
+   The clip has no src until it's near the screen, plays only while visible,
+   and stays as its poster photo for visitors who prefer reduced motion. */
+(function(){
+  var vids=document.querySelectorAll(".mosaic-glass video"); if(!vids.length || reduce || !("IntersectionObserver" in window)) return;
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      var v=e.target;
+      if(e.isIntersecting){
+        if(!v.dataset.ready){ v.dataset.ready="1";
+          Array.prototype.forEach.call(v.querySelectorAll("source[data-src]"),function(s){ s.src=s.getAttribute("data-src"); s.removeAttribute("data-src"); });
+          v.preload="auto"; try{ v.load(); }catch(x){} }
+        try{ var q=v.play(); if(q&&q.catch) q.catch(function(){}); }catch(x){}
+      } else { try{ v.pause(); }catch(x){} }
+    });
+  },{rootMargin:"200px 0px"});
+  Array.prototype.forEach.call(vids,function(v){ io.observe(v); });
 })();
 
 /* ---------- FILM REVEAL (portrait program videos) ----------

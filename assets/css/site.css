@@ -580,6 +580,7 @@ footer.site{border-top:1px solid var(--line);padding:44px 0 110px;background:var
 .m-tall{grid-column:span 4}
 .m-wide{grid-column:span 8}
 .m-half{grid-column:span 6}
+.m-full{grid-column:span 12}
 /* Two equal photos side by side (e.g. Kids Jiu Jitsu page) — same 4:3 box so
    they line up exactly regardless of source size */
 .photo-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
@@ -633,7 +634,7 @@ footer.site{border-top:1px solid var(--line);padding:44px 0 110px;background:var
 .m-wide .ph img{object-position:center 32%}
 @media(max-width:900px){
   .mosaic{grid-template-columns:1fr;gap:22px}
-  .m-tall,.m-wide,.m-half{grid-column:1/-1}
+  .m-tall,.m-wide,.m-half,.m-full{grid-column:1/-1}
   .fig .ph{height:auto;aspect-ratio:4/3}
 }
 /* ---- Liquid glass gallery (About "Inside the room") ----
@@ -646,7 +647,7 @@ footer.site{border-top:1px solid var(--line);padding:44px 0 110px;background:var
 .mosaic-glass .ph.gl-on img{opacity:0}
 .mosaic-glass .ph.gl-on{cursor:none}
 .mosaic-glass .ph.gl-on:hover img{transform:none}
-.mosaic-glass figcaption::before{counter-increment:fig;content:counter(fig,decimal-leading-zero) " / 08";display:inline-block;margin-right:12px;color:var(--fg);opacity:.55}
+.mosaic-glass figcaption::before{counter-increment:fig;content:counter(fig,decimal-leading-zero) " / 21";display:inline-block;margin-right:12px;color:var(--fg);opacity:.55}
 
 
 /* ============ FILM REVEAL (portrait program videos) ============
@@ -935,7 +936,12 @@ html.js .mosaic-glass .ph.gl-on img{opacity:0}
 /* the splash only plays on the first visit to the homepage in a session */
 html.intro-seen #intro{display:none!important}
 /* phones: light version of the "Inside the room" gallery (no WebGL) */
-.mosaic-glass.glass-lite .ph.is-mid img{filter:grayscale(0) contrast(1)}
+.mosaic-glass.glass-lite .ph.is-mid img,.mosaic-glass.glass-lite .ph.is-mid video{filter:grayscale(0) contrast(1)}
+/* video tile in the gallery: plays over its poster photo; on desktop the glass
+   canvas draws the video frames instead, so the <video> itself is hidden */
+.mosaic-glass .ph video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;filter:grayscale(1) contrast(1.05);transition:filter .55s ease}
+.mosaic-glass .ph:hover video{filter:grayscale(0) contrast(1)}
+.mosaic-glass .ph.gl-on video{opacity:0}
 
 /* ============ PHOTO ROW (any mix of portrait/landscape, equal heights, no cropping) ============
    Each figure sets --ar (width/height of its photo); flex-grow follows it so heights match. */
