@@ -979,39 +979,65 @@ html.intro-seen #intro{display:none!important}
 html.js .sched-static{display:none}
 
 /* ============ MISSION & VISION (About) ============
-   Always on the light "White" palette so the bone-toned poster photo melts
-   into the page: its edges are masked out instead of framed. The photo is
-   never cropped (the motto is part of it) and stays put on desktop while
-   the copy scrolls past. */
-.mv{--bg:#E9E5D9;--fg:#171717;--muted:#595752;--line:rgba(23,23,23,.20);--surface:#DFDBCF;--surface-2:#D4D0C6;--veil:23,23,23;overflow:clip}
+   Heading left, philosophy right, then Mission / Vision side by side.
+   Always on the light "White" palette so it stands apart from the dark
+   page intro and the dark core-values section that follows. */
+.mv{--bg:#E9E5D9;--fg:#171717;--muted:#595752;--line:rgba(23,23,23,.20);--surface:#DFDBCF;--surface-2:#D4D0C6;--veil:23,23,23}
 html[data-theme="light"] .mv{border-top:1px solid var(--line)}
-.mv-grid{display:grid;grid-template-columns:minmax(0,11fr) minmax(0,12fr);grid-template-areas:"head photo" "copy photo";column-gap:clamp(28px,4.5vw,72px);align-items:start}
-.mv-head{grid-area:head}
-.mv-head .h-lg{margin-top:14px;font-size:clamp(40px,7vw,96px);line-height:.9}
-.mv-side{grid-area:photo;align-self:stretch;display:flex;flex-direction:column;justify-content:space-between;gap:0;margin-top:calc(-1 * clamp(56px,7vw,100px));margin-right:calc(-1 * var(--gut))}
-.mv-photo{margin:0;position:relative}
-.mv-photo img{display:block;width:100%;height:auto;aspect-ratio:4/5;
-  -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 7%,#000 74%,transparent 100%),linear-gradient(to right,transparent 0,#000 3%,#000 96%,transparent 100%);
-  -webkit-mask-composite:source-in;
-  mask-image:linear-gradient(to bottom,transparent 0,#000 7%,#000 74%,transparent 100%),linear-gradient(to right,transparent 0,#000 3%,#000 96%,transparent 100%);
-  mask-composite:intersect}
-.mv-copy{grid-area:copy;margin-top:clamp(32px,4vw,56px)}
-.mv-item{border-top:1px solid var(--line);padding:22px 0 26px}
+.mv-grid{display:grid;grid-template-columns:minmax(0,11fr) minmax(0,12fr);column-gap:clamp(28px,4.5vw,72px);align-items:start}
+.mv-head .h-lg{margin-top:14px;font-size:clamp(34px,5vw,72px);line-height:.94;max-width:12ch}
+.mv-copy{border-top:1px solid var(--line);padding-top:22px;margin-top:6px}
+.mv-copy p:not(.mv-num){color:var(--muted);font-size:15.5px;line-height:1.7;max-width:58ch}
+.mv-copy p + p{margin-top:12px}
+.mv-copy .mv-lead{color:var(--fg)!important;font-size:clamp(17px,1.6vw,20px)!important;line-height:1.5!important;margin-top:12px}
 .mv-num{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
-.mv-item h3{font-family:var(--display);font-weight:500;font-size:clamp(22px,2.4vw,30px);line-height:1.05;letter-spacing:-.02em;text-transform:uppercase;margin:12px 0;max-width:20ch}
-.mv-item p:not(.mv-num){color:var(--muted);font-size:15.5px;line-height:1.65;max-width:50ch}
-.mv-side .mv-pillars{margin:calc(-1 * clamp(40px,5vw,72px)) var(--gut) 0 0;position:relative}
-.mv-pillars{list-style:none;margin:6px 0 0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;border-top:1px solid var(--line);padding:20px 0 0}
-.mv-pillars strong{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:var(--fg);margin-bottom:8px}
-.mv-pillars span{display:block;font-size:13.5px;line-height:1.5;color:var(--muted)}
+.mv-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(28px,4.5vw,72px);margin-top:clamp(48px,6vw,88px)}
+.mv-item{border-top:1px solid var(--fg);padding-top:22px}
+.mv-item h3{font-family:var(--display);font-weight:500;font-size:clamp(20px,2vw,26px);line-height:1.2;letter-spacing:-.015em;margin:14px 0}
+.mv-item p:not(.mv-num){color:var(--muted);font-size:15.5px;line-height:1.65;max-width:56ch}
 @media(max-width:900px){
-  .mv-grid{grid-template-columns:1fr;grid-template-areas:"head" "photo" "copy" "pillars"}
-  .mv-side{display:contents;margin:0}
-  .mv-photo{grid-area:photo}
-  .mv-side .mv-pillars{grid-area:pillars;margin:6px 0 0}
-  .mv-photo{position:relative;top:auto;margin:18px auto 0;width:100%;max-width:600px}
-  .mv-copy{margin-top:-24px;position:relative}
+  .mv-grid{grid-template-columns:1fr}
+  .mv-copy{margin-top:28px}
+  .mv-pair{grid-template-columns:1fr;gap:36px}
 }
-@media(max-width:640px){.mv-photo{width:auto;max-width:none;margin:18px calc(-1 * var(--gut)) 0}
-  .mv-photo img{-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 7%,#000 80%,transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 7%,#000 80%,transparent 100%)}}
-@media(max-width:560px){.mv-pillars{grid-template-columns:1fr;gap:16px}}
+
+/* ============ CORE VALUES (About) ============
+   Heading takes the first cell, the seven values fill the rest: 4 x 2 on
+   desktop, 2 columns on tablets, 1 on phones. */
+.values-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(28px,3vw,44px) clamp(20px,2.4vw,36px)}
+.values-head .h-lg{margin-top:14px;font-size:clamp(28px,3.2vw,44px);line-height:1}
+.value{border-top:1px solid var(--line);padding-top:18px}
+.value h3{font-family:var(--display);font-weight:500;font-size:clamp(19px,1.7vw,23px);line-height:1.1;letter-spacing:-.01em;text-transform:uppercase;margin:12px 0 10px}
+.value p:not(.mv-num){color:var(--muted);font-size:14.5px;line-height:1.65}
+@media(max-width:1000px){.values-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.values-head{grid-column:1/-1}.value:last-child{grid-column:1/-1}.value:last-child p{max-width:60ch}}
+@media(max-width:600px){.values-grid{grid-template-columns:1fr;gap:28px}}
+
+/* ============ COMMITMENT + THE MENTALITY CODE (About) ============ */
+.code-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(36px,6vw,96px);align-items:start}
+.commit .h-md{margin:14px 0 18px;line-height:1.15;max-width:26ch}
+.commit-intro{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.commit-list{list-style:none;margin:0;padding:0;counter-reset:c}
+.commit-list li{position:relative;padding:12px 0 12px 34px;border-bottom:1px solid var(--line);font-size:15px;line-height:1.55;color:var(--fg)}
+.commit-list li::before{content:"";position:absolute;left:2px;top:21px;width:16px;height:1px;background:var(--fg)}
+.commit-close{margin-top:18px;color:var(--muted);font-size:15px;line-height:1.65;max-width:52ch}
+.mcode-list{list-style:none;margin:14px 0 0;padding:0;counter-reset:mc}
+.mcode-list li{counter-increment:mc;display:flex;align-items:baseline;gap:14px;font-family:var(--display);font-weight:500;text-transform:uppercase;letter-spacing:-.025em;font-size:clamp(22px,2.6vw,36px);line-height:1.08;padding:9px 0;border-bottom:1px solid var(--line)}
+.mcode-list li::before{content:counter(mc,decimal-leading-zero);font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--muted);flex:0 0 auto;transform:translateY(-.35em)}
+.mcode-close{margin-top:18px;color:var(--muted);font-size:15px;line-height:1.65;max-width:50ch}
+@media(max-width:900px){.code-grid{grid-template-columns:1fr}}
+
+/* ============ MORE THAN MARTIAL ARTS (About, closing) ============ */
+.mtma .eyebrow{margin-bottom:16px}
+.mtma-title{font-family:var(--display);font-weight:500;text-transform:uppercase;letter-spacing:-.03em;line-height:.98;font-size:clamp(30px,4.6vw,64px);max-width:20ch}
+.mtma-body{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(24px,4vw,64px);margin-top:clamp(32px,4vw,52px);border-top:1px solid var(--line);padding-top:24px}
+.mtma-body > p{color:var(--muted);font-size:16px;line-height:1.65;max-width:46ch}
+.mtma-lines{list-style:none;margin:0;padding:0}
+.mtma-lines li{font-size:clamp(17px,1.6vw,20px);line-height:1.4;padding:0 0 12px;margin-bottom:12px;border-bottom:1px solid var(--line)}
+.mtma-lines li:last-child{border-bottom:0;margin-bottom:0}
+.mtma-sign{margin-top:clamp(48px,6vw,88px)}
+.mtma-sign .eyebrow{margin:0 0 14px}
+.mtma-big{font-family:var(--display);font-weight:500;text-transform:uppercase;letter-spacing:-.04em;line-height:.9;font-size:clamp(34px,7vw,104px)}
+.mtma-big span{display:block}
+@media(min-width:700px){.mtma-big span{white-space:nowrap}}
+.mtma-tag{font-family:var(--mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-top:22px}
+@media(max-width:800px){.mtma-body{grid-template-columns:1fr}}
